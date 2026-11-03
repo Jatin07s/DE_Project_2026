@@ -24,10 +24,10 @@
 
 | Role | Name | Enrollment No. | GitHub Username |
 |------|------|----------------|-----------------|
-| Group Lead | | | |
-| Member 2 | | | |
-| Member 3 | | | |
-| Member 4 | | | |
+| Group Lead | Jatin Kumar Singh | 2501010203 | Jatin07s |
+| Member 2 | Omm Prakash Sahoo | 2501010315 | ommprakash48 |
+| Member 3 | Yash Prasad | 2501010522 | YashPrasad |
+| Member 4 | Tamojit Duary | 2501010470 | tamojit1338r-droid |
 
 **Team No.:** ____ · **Section:** ____ · **Repository URL:** ____
 
