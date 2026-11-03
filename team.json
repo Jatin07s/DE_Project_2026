@@ -1,0 +1,27 @@
+{
+  "team_number": "T0014",
+  "group_lead": {
+    "name": "Jatin Kumar Singh",
+    "enrollment_no": "2501010203",
+    "github": "Jatin07s"
+  },
+  "members": [
+    {
+      "name": "Omm Prakash Sahoo",
+      "enrollment_no": "2501010315",
+      "github": "ommprakash48"
+    },
+    {
+      "name": "Yash Prasad",
+      "enrollment_no": "2501010522",
+      "github": "YashPrasad"
+    },
+    {
+      "name": "Tamojit Duary",
+      "enrollment_no": "2501010470",
+      "github": "tamojit1338r-droid"
+    }
+  ],
+  "postgres_version": "18.6",
+  "laptop_used_for_benchmarks": "MacBook Pro (Apple M4)"
+}
