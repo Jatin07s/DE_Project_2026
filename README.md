@@ -29,7 +29,7 @@
 | Member 3 | Yash Prasad | 2501010522 | YashPrasad |
 | Member 4 | Tamojit Duary | 2501010470 | tamojit1338r-droid |
 
-**Team No.:** ____ · **Section:** ____ · **Repository URL:** ____
+**Team No.:** T0014 · **Section:** D · **Repository URL:** https://github.com/Jatin07s/DE_Project_2026
 
 ---
 
