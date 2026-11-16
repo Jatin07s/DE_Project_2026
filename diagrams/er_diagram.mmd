@@ -1,0 +1,83 @@
+erDiagram
+  cities ||--o{ professionals : has
+  cities ||--o{ customers : has
+  cities ||--o{ bookings : contains
+  service_categories ||--o{ services : groups
+  service_categories ||--o{ pro_skills : grants
+  professionals ||--o{ pro_skills : certified_for
+  professionals ||--o{ pro_availability : offers
+  professionals o|--o{ bookings : assigned_to
+  professionals ||--o{ payouts : receives
+  customers ||--o{ bookings : places
+  services ||--o{ bookings : chosen_for
+  bookings ||--o{ reschedules : changes
+  bookings ||--o| reviews : receives
+
+  cities {
+    int city_id PK
+    varchar city_name
+    varchar state
+  }
+  service_categories {
+    int category_id PK
+    varchar category_name
+  }
+  services {
+    int service_id PK
+    int category_id FK
+    varchar service_name
+    int duration_min
+    numeric base_price
+    boolean is_active
+  }
+  professionals {
+    int pro_id PK
+    int city_id FK
+    varchar full_name
+    varchar phone
+    varchar status
+    numeric rating
+  }
+  pro_skills {
+    int pro_id PK,FK
+    int category_id PK,FK
+    date certified_on
+  }
+  pro_availability {
+    int pro_id PK,FK
+    date work_date PK
+    time start_time
+    time end_time
+  }
+  customers {
+    int customer_id PK
+    int city_id FK
+    varchar phone
+    date plus_valid_until
+  }
+  bookings {
+    bigint booking_id PK
+    int customer_id FK
+    int service_id FK
+    int pro_id FK
+    int city_id FK
+    timestamptz scheduled_start
+    varchar status
+  }
+  reschedules {
+    bigint reschedule_id PK
+    bigint booking_id FK
+    timestamptz old_start
+    timestamptz new_start
+  }
+  reviews {
+    bigint booking_id PK,FK
+    smallint rating_for_pro
+    smallint rating_for_customer
+  }
+  payouts {
+    bigint payout_id PK
+    int pro_id FK
+    date week_start
+    numeric net_payout
+  }
