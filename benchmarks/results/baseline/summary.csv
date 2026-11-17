@@ -1,0 +1,31 @@
+query_id,type,avg_ms,median_ms,min_ms,max_ms,scan_nodes
+R01,READ,0.078,0.071,0.068,0.096,Seq Scan on services | Seq Scan on service_categories
+R02,READ,8.938,8.523,7.684,10.608,Seq Scan on pro_skills | Seq Scan on professionals | Seq Scan on service_categories | Index Scan using pk_pro_availability on pro_availability | Seq Scan on bookings
+R03,READ,5.972,5.960,5.609,6.347,Seq Scan on bookings | Seq Scan on services | Index Scan using professionals_pkey on professionals
+R04,READ,4.441,4.356,4.354,4.614,Seq Scan on bookings | Seq Scan on services
+R05,READ,7.382,7.318,7.317,7.512,Seq Scan on bookings
+R06,READ,0.023,0.023,0.022,0.024,Index Scan using customers_phone_key on customers
+R07,READ,5.281,5.251,5.250,5.342,Seq Scan on bookings
+R08,READ,1.432,1.415,1.388,1.493,Seq Scan on professionals | Seq Scan on payouts
+R09,READ,5.995,5.996,5.964,6.026,Seq Scan on bookings | Seq Scan on services | Seq Scan on service_categories
+R10,READ,16.829,16.798,16.743,16.945,Seq Scan on bookings
+R11,READ,0.643,0.630,0.615,0.685,Seq Scan on reschedules | Index Scan using bookings_pkey on bookings | Index Scan using services_pkey on services
+R12,READ,7.223,7.266,7.037,7.367,Seq Scan on bookings
+R13,READ,7.618,7.610,7.540,7.705,Seq Scan on professionals | Seq Scan on bookings
+R14,READ,19.251,19.225,18.953,19.574,Seq Scan on bookings | Seq Scan on services
+R15,READ,11.651,11.677,11.536,11.740,Seq Scan on bookings | Seq Scan on reviews
+R16,READ,4.791,4.663,4.648,5.062,Seq Scan on bookings
+R17,READ,13.904,13.795,13.701,14.216,Seq Scan on bookings | Seq Scan on services
+R18,READ,14.209,14.218,14.000,14.410,Seq Scan on reviews
+R19,READ,3220.028,3216.480,3204.968,3238.635,Seq Scan on professionals | Seq Scan on bookings
+R20,READ,8.453,8.369,7.886,9.105,Seq Scan on bookings
+R21,READ,13.676,13.717,13.514,13.796,Seq Scan on bookings | Seq Scan on services | Seq Scan on pro_skills
+R22,READ,29.956,29.741,29.711,30.416,Seq Scan on bookings
+R23,READ,0.050,0.048,0.046,0.056,Seq Scan on services | Index Scan using bookings_pkey on bookings
+R24,READ,9.426,9.096,8.893,10.290,Seq Scan on bookings
+R25,READ,2097.081,2097.330,2085.657,2108.255,Index Scan using professionals_pkey on professionals | Seq Scan on pro_availability | Seq Scan on bookings
+W01,WRITE,0.834,0.851,0.791,0.859,(no scan)
+W02,WRITE,11.058,10.587,10.313,12.275,Index Scan using bookings_pkey on bookings
+W03,WRITE,6.585,6.593,6.449,6.712,Seq Scan on bookings
+W04,WRITE,8.710,8.545,8.513,9.071,Seq Scan on bookings
+W05,WRITE,6.952,6.929,6.906,7.022,Seq Scan on bookings

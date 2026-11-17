@@ -1,0 +1,165 @@
+=== R02 run 1 ===
+Limit  (cost=5312.89..5312.92 rows=10 width=22) (actual time=10.534..10.556 rows=10.00 loops=1)
+  Buffers: shared hit=2938
+  ->  Sort  (cost=5312.89..5313.03 rows=55 width=22) (actual time=10.532..10.553 rows=10.00 loops=1)
+        Sort Key: p.rating DESC NULLS LAST
+        Sort Method: top-N heapsort  Memory: 26kB
+        Buffers: shared hit=2938
+        ->  Nested Loop Anti Join  (cost=1070.37..5311.70 rows=55 width=22) (actual time=9.556..10.520 rows=98.00 loops=1)
+              Join Filter: (b.pro_id = p.pro_id)
+              Rows Removed by Join Filter: 1470
+              Buffers: shared hit=2935
+              ->  Nested Loop  (cost=70.37..222.66 rows=55 width=22) (actual time=0.275..1.118 rows=98.00 loops=1)
+                    Buffers: shared hit=388
+                    ->  Hash Join  (cost=70.08..163.88 rows=71 width=26) (actual time=0.269..0.751 rows=117.00 loops=1)
+                          Hash Cond: (ps.category_id = c.category_id)
+                          Buffers: shared hit=56
+                          ->  Hash Join  (cost=68.94..160.08 rows=710 width=30) (actual time=0.248..0.694 rows=714.00 loops=1)
+                                Hash Cond: (ps.pro_id = p.pro_id)
+                                Buffers: shared hit=55
+                                ->  Seq Scan on pro_skills ps  (cost=0.00..78.00 rows=5000 width=8) (actual time=0.005..0.169 rows=5000.00 loops=1)
+                                      Buffers: shared hit=28
+                                ->  Hash  (cost=64.50..64.50 rows=355 width=22) (actual time=0.238..0.239 rows=357.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 28kB
+                                      Buffers: shared hit=27
+                                      ->  Seq Scan on professionals p  (cost=0.00..64.50 rows=355 width=22) (actual time=0.005..0.199 rows=357.00 loops=1)
+                                            Filter: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                            Rows Removed by Filter: 2143
+                                            Buffers: shared hit=27
+                          ->  Hash  (cost=1.12..1.12 rows=1 width=4) (actual time=0.009..0.010 rows=1.00 loops=1)
+                                Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                Buffers: shared hit=1
+                                ->  Seq Scan on service_categories c  (cost=0.00..1.12 rows=1 width=4) (actual time=0.004..0.005 rows=1.00 loops=1)
+                                      Filter: ((category_name)::text = 'Salon for Women'::text)
+                                      Rows Removed by Filter: 9
+                                      Buffers: shared hit=1
+                    ->  Index Scan using pk_pro_availability on pro_availability a  (cost=0.29..0.83 rows=1 width=4) (actual time=0.003..0.003 rows=0.84 loops=117)
+                          Index Cond: ((pro_id = ps.pro_id) AND (work_date = '2026-07-03'::date))
+                          Filter: ((start_time <= '11:00:00'::time without time zone) AND (end_time >= '12:30:00'::time without time zone))
+                          Index Searches: 117
+                          Buffers: shared hit=332
+              ->  Materialize  (cost=1000.00..5088.22 rows=1 width=4) (actual time=0.094..0.095 rows=15.00 loops=98)
+                    Storage: Memory  Maximum Storage: 17kB
+                    Buffers: shared hit=2547
+                    ->  Gather  (cost=1000.00..5088.22 rows=1 width=4) (actual time=9.225..9.291 rows=15.00 loops=1)
+                          Workers Planned: 1
+                          Workers Launched: 1
+                          Buffers: shared hit=2547
+                          ->  Parallel Seq Scan on bookings b  (cost=0.00..4088.12 rows=1 width=4) (actual time=7.794..7.820 rows=7.50 loops=2)
+                                Filter: (((status)::text = ANY ('{ASSIGNED,IN_PROGRESS}'::text[])) AND (scheduled_start < '2026-07-03 12:30:00+05:30'::timestamp with time zone) AND (scheduled_end > '2026-07-03 11:00:00+05:30'::timestamp with time zone))
+                                Rows Removed by Filter: 74992
+                                Buffers: shared hit=2547
+Planning:
+  Buffers: shared hit=481
+Planning Time: 1.587 ms
+Execution Time: 10.608 ms
+=== R02 run 2 ===
+Limit  (cost=5312.89..5312.92 rows=10 width=22) (actual time=8.479..8.488 rows=10.00 loops=1)
+  Buffers: shared hit=2938
+  ->  Sort  (cost=5312.89..5313.03 rows=55 width=22) (actual time=8.478..8.487 rows=10.00 loops=1)
+        Sort Key: p.rating DESC NULLS LAST
+        Sort Method: top-N heapsort  Memory: 26kB
+        Buffers: shared hit=2938
+        ->  Nested Loop Anti Join  (cost=1070.37..5311.70 rows=55 width=22) (actual time=7.648..8.461 rows=98.00 loops=1)
+              Join Filter: (b.pro_id = p.pro_id)
+              Rows Removed by Join Filter: 1470
+              Buffers: shared hit=2935
+              ->  Nested Loop  (cost=70.37..222.66 rows=55 width=22) (actual time=0.219..0.943 rows=98.00 loops=1)
+                    Buffers: shared hit=388
+                    ->  Hash Join  (cost=70.08..163.88 rows=71 width=26) (actual time=0.215..0.598 rows=117.00 loops=1)
+                          Hash Cond: (ps.category_id = c.category_id)
+                          Buffers: shared hit=56
+                          ->  Hash Join  (cost=68.94..160.08 rows=710 width=30) (actual time=0.198..0.555 rows=714.00 loops=1)
+                                Hash Cond: (ps.pro_id = p.pro_id)
+                                Buffers: shared hit=55
+                                ->  Seq Scan on pro_skills ps  (cost=0.00..78.00 rows=5000 width=8) (actual time=0.004..0.137 rows=5000.00 loops=1)
+                                      Buffers: shared hit=28
+                                ->  Hash  (cost=64.50..64.50 rows=355 width=22) (actual time=0.190..0.190 rows=357.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 28kB
+                                      Buffers: shared hit=27
+                                      ->  Seq Scan on professionals p  (cost=0.00..64.50 rows=355 width=22) (actual time=0.004..0.159 rows=357.00 loops=1)
+                                            Filter: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                            Rows Removed by Filter: 2143
+                                            Buffers: shared hit=27
+                          ->  Hash  (cost=1.12..1.12 rows=1 width=4) (actual time=0.007..0.007 rows=1.00 loops=1)
+                                Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                Buffers: shared hit=1
+                                ->  Seq Scan on service_categories c  (cost=0.00..1.12 rows=1 width=4) (actual time=0.003..0.004 rows=1.00 loops=1)
+                                      Filter: ((category_name)::text = 'Salon for Women'::text)
+                                      Rows Removed by Filter: 9
+                                      Buffers: shared hit=1
+                    ->  Index Scan using pk_pro_availability on pro_availability a  (cost=0.29..0.83 rows=1 width=4) (actual time=0.003..0.003 rows=0.84 loops=117)
+                          Index Cond: ((pro_id = ps.pro_id) AND (work_date = '2026-07-03'::date))
+                          Filter: ((start_time <= '11:00:00'::time without time zone) AND (end_time >= '12:30:00'::time without time zone))
+                          Index Searches: 117
+                          Buffers: shared hit=332
+              ->  Materialize  (cost=1000.00..5088.22 rows=1 width=4) (actual time=0.075..0.076 rows=15.00 loops=98)
+                    Storage: Memory  Maximum Storage: 17kB
+                    Buffers: shared hit=2547
+                    ->  Gather  (cost=1000.00..5088.22 rows=1 width=4) (actual time=7.372..7.429 rows=15.00 loops=1)
+                          Workers Planned: 1
+                          Workers Launched: 1
+                          Buffers: shared hit=2547
+                          ->  Parallel Seq Scan on bookings b  (cost=0.00..4088.12 rows=1 width=4) (actual time=6.175..6.200 rows=7.50 loops=2)
+                                Filter: (((status)::text = ANY ('{ASSIGNED,IN_PROGRESS}'::text[])) AND (scheduled_start < '2026-07-03 12:30:00+05:30'::timestamp with time zone) AND (scheduled_end > '2026-07-03 11:00:00+05:30'::timestamp with time zone))
+                                Rows Removed by Filter: 74992
+                                Buffers: shared hit=2547
+Planning:
+  Buffers: shared hit=481
+Planning Time: 1.244 ms
+Execution Time: 8.523 ms
+=== R02 run 3 ===
+Limit  (cost=5312.89..5312.92 rows=10 width=22) (actual time=7.645..7.655 rows=10.00 loops=1)
+  Buffers: shared hit=2938
+  ->  Sort  (cost=5312.89..5313.03 rows=55 width=22) (actual time=7.645..7.654 rows=10.00 loops=1)
+        Sort Key: p.rating DESC NULLS LAST
+        Sort Method: top-N heapsort  Memory: 26kB
+        Buffers: shared hit=2938
+        ->  Nested Loop Anti Join  (cost=1070.37..5311.70 rows=55 width=22) (actual time=6.893..7.630 rows=98.00 loops=1)
+              Join Filter: (b.pro_id = p.pro_id)
+              Rows Removed by Join Filter: 1470
+              Buffers: shared hit=2935
+              ->  Nested Loop  (cost=70.37..222.66 rows=55 width=22) (actual time=0.195..0.855 rows=98.00 loops=1)
+                    Buffers: shared hit=388
+                    ->  Hash Join  (cost=70.08..163.88 rows=71 width=26) (actual time=0.191..0.528 rows=117.00 loops=1)
+                          Hash Cond: (ps.category_id = c.category_id)
+                          Buffers: shared hit=56
+                          ->  Hash Join  (cost=68.94..160.08 rows=710 width=30) (actual time=0.167..0.480 rows=714.00 loops=1)
+                                Hash Cond: (ps.pro_id = p.pro_id)
+                                Buffers: shared hit=55
+                                ->  Seq Scan on pro_skills ps  (cost=0.00..78.00 rows=5000 width=8) (actual time=0.003..0.122 rows=5000.00 loops=1)
+                                      Buffers: shared hit=28
+                                ->  Hash  (cost=64.50..64.50 rows=355 width=22) (actual time=0.160..0.160 rows=357.00 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 28kB
+                                      Buffers: shared hit=27
+                                      ->  Seq Scan on professionals p  (cost=0.00..64.50 rows=355 width=22) (actual time=0.003..0.134 rows=357.00 loops=1)
+                                            Filter: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                            Rows Removed by Filter: 2143
+                                            Buffers: shared hit=27
+                          ->  Hash  (cost=1.12..1.12 rows=1 width=4) (actual time=0.016..0.016 rows=1.00 loops=1)
+                                Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                Buffers: shared hit=1
+                                ->  Seq Scan on service_categories c  (cost=0.00..1.12 rows=1 width=4) (actual time=0.002..0.003 rows=1.00 loops=1)
+                                      Filter: ((category_name)::text = 'Salon for Women'::text)
+                                      Rows Removed by Filter: 9
+                                      Buffers: shared hit=1
+                    ->  Index Scan using pk_pro_availability on pro_availability a  (cost=0.29..0.83 rows=1 width=4) (actual time=0.003..0.003 rows=0.84 loops=117)
+                          Index Cond: ((pro_id = ps.pro_id) AND (work_date = '2026-07-03'::date))
+                          Filter: ((start_time <= '11:00:00'::time without time zone) AND (end_time >= '12:30:00'::time without time zone))
+                          Index Searches: 117
+                          Buffers: shared hit=332
+              ->  Materialize  (cost=1000.00..5088.22 rows=1 width=4) (actual time=0.068..0.069 rows=15.00 loops=98)
+                    Storage: Memory  Maximum Storage: 17kB
+                    Buffers: shared hit=2547
+                    ->  Gather  (cost=1000.00..5088.22 rows=1 width=4) (actual time=6.649..6.701 rows=15.00 loops=1)
+                          Workers Planned: 1
+                          Workers Launched: 1
+                          Buffers: shared hit=2547
+                          ->  Parallel Seq Scan on bookings b  (cost=0.00..4088.12 rows=1 width=4) (actual time=5.627..5.649 rows=7.50 loops=2)
+                                Filter: (((status)::text = ANY ('{ASSIGNED,IN_PROGRESS}'::text[])) AND (scheduled_start < '2026-07-03 12:30:00+05:30'::timestamp with time zone) AND (scheduled_end > '2026-07-03 11:00:00+05:30'::timestamp with time zone))
+                                Rows Removed by Filter: 74992
+                                Buffers: shared hit=2547
+Planning:
+  Buffers: shared hit=481
+Planning Time: 1.131 ms
+Execution Time: 7.684 ms
