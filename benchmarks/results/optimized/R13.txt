@@ -1,0 +1,48 @@
+=== R13 run 1 ===
+Nested Loop Anti Join  (cost=0.29..1142.35 rows=260 width=22) (actual time=0.010..1.200 rows=377.00 loops=1)
+  Buffers: shared hit=4511
+  ->  Seq Scan on professionals p  (cost=0.00..58.25 rows=2220 width=22) (actual time=0.004..0.125 rows=2220.00 loops=1)
+        Filter: ((status)::text = 'ACTIVE'::text)
+        Rows Removed by Filter: 280
+        Buffers: shared hit=27
+  ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.29..0.87 rows=5 width=4) (actual time=0.000..0.000 rows=0.83 loops=2220)
+        Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
+        Heap Fetches: 43
+        Index Searches: 2220
+        Buffers: shared hit=4484
+Planning:
+  Buffers: shared hit=453
+Planning Time: 0.686 ms
+Execution Time: 1.218 ms
+=== R13 run 2 ===
+Nested Loop Anti Join  (cost=0.29..1142.35 rows=260 width=22) (actual time=0.011..1.336 rows=377.00 loops=1)
+  Buffers: shared hit=4511
+  ->  Seq Scan on professionals p  (cost=0.00..58.25 rows=2220 width=22) (actual time=0.005..0.143 rows=2220.00 loops=1)
+        Filter: ((status)::text = 'ACTIVE'::text)
+        Rows Removed by Filter: 280
+        Buffers: shared hit=27
+  ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.29..0.87 rows=5 width=4) (actual time=0.000..0.000 rows=0.83 loops=2220)
+        Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
+        Heap Fetches: 43
+        Index Searches: 2220
+        Buffers: shared hit=4484
+Planning:
+  Buffers: shared hit=453
+Planning Time: 0.685 ms
+Execution Time: 1.359 ms
+=== R13 run 3 ===
+Nested Loop Anti Join  (cost=0.29..1142.35 rows=260 width=22) (actual time=0.009..1.205 rows=377.00 loops=1)
+  Buffers: shared hit=4511
+  ->  Seq Scan on professionals p  (cost=0.00..58.25 rows=2220 width=22) (actual time=0.004..0.136 rows=2220.00 loops=1)
+        Filter: ((status)::text = 'ACTIVE'::text)
+        Rows Removed by Filter: 280
+        Buffers: shared hit=27
+  ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.29..0.87 rows=5 width=4) (actual time=0.000..0.000 rows=0.83 loops=2220)
+        Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
+        Heap Fetches: 43
+        Index Searches: 2220
+        Buffers: shared hit=4484
+Planning:
+  Buffers: shared hit=453
+Planning Time: 0.637 ms
+Execution Time: 1.224 ms

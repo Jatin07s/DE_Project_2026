@@ -1,0 +1,362 @@
+-- =====================================================================
+-- Urban Company DBMS Project: optimized versions of the 30 workload queries
+--   R01–R25 : read queries  (25)
+--   W01–W05 : write queries (5)
+--
+-- RULES
+--   * These are rewritten counterparts of queries/workload_30.sql.
+--   * Every query returns the SAME result set as the original.
+--   * Relies on indexes created by sql/05_indexes.sql.
+--   * The "-- @R01" marker lines are used by benchmarks/run_benchmark.sh.
+-- =====================================================================
+SET search_path TO uc;
+BEGIN;
+
+-- @R01
+-- Service menu: active AC Repair services, cheapest first
+-- (Original is already fast with tiny tables; kept as-is.)
+SELECT s.service_id, s.service_name, s.duration_min, s.base_price
+FROM services s
+JOIN service_categories c ON c.category_id = s.category_id
+WHERE c.category_name = 'AC Repair' AND s.is_active
+ORDER BY s.base_price;
+
+-- @R02
+-- Slot picker: Bengaluru salon professionals free on 3 July 2026 from 11:00 to 12:30
+-- Optimization: idx_professionals_city_status drives the outer scan;
+-- idx_bookings_pro_status replaces Seq Scan on bookings in NOT EXISTS.
+SELECT p.pro_id, p.full_name, p.rating
+FROM professionals p
+JOIN pro_skills ps       ON ps.pro_id = p.pro_id
+JOIN service_categories c ON c.category_id = ps.category_id AND c.category_name = 'Salon for Women'
+JOIN pro_availability a  ON a.pro_id = p.pro_id AND a.work_date = '2026-07-03'
+WHERE p.city_id = 1 AND p.status = 'ACTIVE'
+  AND a.start_time <= '11:00' AND a.end_time >= '12:30'
+  AND NOT EXISTS (SELECT 1 FROM bookings b
+                  WHERE b.pro_id = p.pro_id
+                    AND b.status IN ('ASSIGNED', 'IN_PROGRESS')
+                    AND b.scheduled_start < '2026-07-03 12:30:00+05:30'
+                    AND b.scheduled_end   > '2026-07-03 11:00:00+05:30')
+ORDER BY p.rating DESC NULLS LAST
+LIMIT 10;
+
+-- @R03
+-- "My bookings": customer 226's upcoming bookings
+-- Optimization: idx_bookings_customer_sched provides an index scan.
+SELECT b.booking_id, s.service_name, b.scheduled_start, b.status, p.full_name AS professional
+FROM bookings b
+JOIN services s ON s.service_id = b.service_id
+LEFT JOIN professionals p ON p.pro_id = b.pro_id
+WHERE b.customer_id = 226
+  AND b.scheduled_start >= '2026-07-01'
+ORDER BY b.scheduled_start;
+
+-- @R04
+-- Partner app: professional 425's jobs on 2 July 2026
+-- Optimization: replaced DATE(scheduled_start) = ... with a range predicate
+-- so idx_bookings_pro_status or a pro_id index can be used.
+SELECT b.booking_id, s.service_name, b.scheduled_start, b.scheduled_end, b.pincode, b.status
+FROM bookings b
+JOIN services s ON s.service_id = b.service_id
+WHERE b.pro_id = 425
+  AND b.scheduled_start >= '2026-07-02'
+  AND b.scheduled_start <  '2026-07-03'
+ORDER BY b.scheduled_start;
+
+-- @R05
+-- Dispatch: requested jobs with no professional that start before noon on 2 July 2026
+-- Optimization: idx_bookings_status_sched can supply the rows directly.
+SELECT booking_id, service_id, city_id, scheduled_start
+FROM bookings
+WHERE status = 'REQUESTED'
+  AND scheduled_start < '2026-07-02 12:00:00+05:30'
+ORDER BY scheduled_start;
+
+-- @R06
+-- Customer support: look up a customer by mobile number
+-- (Already uses unique index on phone; kept as-is.)
+SELECT customer_id, full_name, city_id, plus_valid_until
+FROM customers
+WHERE phone = '9100001042';
+
+-- @R07
+-- Partner app: professional 425's earnings in the week of 22 June 2026
+-- Optimization: idx_bookings_pro_status lets the planner filter on
+-- pro_id + status first; idx_bookings_status_completed also helps.
+SELECT count(*) AS jobs, sum(price - discount) AS service_value, coalesce(sum(tip), 0) AS tips
+FROM bookings
+WHERE pro_id = 425 AND status = 'COMPLETED'
+  AND completed_at >= '2026-06-22' AND completed_at < '2026-06-29';
+
+-- @R08
+-- Finance: payouts still pending for the week starting 22 June 2026
+-- Optimization: idx_payouts_status_week provides an index scan.
+SELECT po.payout_id, po.pro_id, p.full_name, po.jobs, po.net_payout
+FROM payouts po
+JOIN professionals p ON p.pro_id = po.pro_id
+WHERE po.status = 'PENDING' AND po.week_start = '2026-06-22'
+ORDER BY po.net_payout DESC;
+
+-- @R09
+-- Quality: share of June 2026 jobs that started more than 15 minutes late, per category
+-- Optimization: idx_bookings_status_schedstart filters COMPLETED + date range.
+SELECT c.category_name, count(*) AS jobs,
+       round(100.0 * count(*) FILTER (WHERE b.started_at > b.scheduled_start + interval '15 minutes') / count(*), 1) AS late_pct
+FROM bookings b
+JOIN services s           ON s.service_id = b.service_id
+JOIN service_categories c ON c.category_id = s.category_id
+WHERE b.status = 'COMPLETED'
+  AND b.scheduled_start >= '2026-06-01' AND b.scheduled_start < '2026-07-01'
+GROUP BY c.category_name
+ORDER BY late_pct DESC;
+
+-- @R10
+-- Quality: no-show rate of professionals with at least 20 assigned jobs
+-- Optimization: idx_bookings_pro_status enables an index scan that skips NULLs.
+SELECT pro_id, count(*) AS jobs,
+       round(100.0 * count(*) FILTER (WHERE status = 'NO_SHOW') / count(*), 2) AS no_show_pct
+FROM bookings
+WHERE pro_id IS NOT NULL
+GROUP BY pro_id
+HAVING count(*) >= 20
+ORDER BY no_show_pct DESC
+LIMIT 20;
+
+-- @R11
+-- Operations: services rescheduled most often in June 2026
+-- Optimization: idx_reschedules_created provides an index range scan.
+SELECT s.service_name, count(*) AS reschedules,
+       count(*) FILTER (WHERE r.requested_by = 'PRO') AS by_pro
+FROM reschedules r
+JOIN bookings b ON b.booking_id = r.booking_id
+JOIN services s ON s.service_id = b.service_id
+WHERE r.created_at >= '2026-06-01' AND r.created_at < '2026-07-01'
+GROUP BY s.service_name
+ORDER BY reschedules DESC
+LIMIT 10;
+
+-- @R12
+-- UC Plus: total discount given to Plus members per month in 2026
+-- Optimization: idx_bookings_discount_positive (partial) scans only
+-- rows with discount > 0 and filters on booked_at year.
+SELECT date_trunc('month', b.booked_at) AS month, count(*) AS bookings, sum(b.discount) AS plus_savings
+FROM bookings b
+WHERE b.discount > 0
+  AND b.booked_at >= '2026-01-01' AND b.booked_at < '2027-01-01'
+GROUP BY 1
+ORDER BY 1;
+
+-- @R13
+-- Partner rewards: active professionals who have never had a booking cancelled by a customer
+-- Optimization: replaced NOT IN with NOT EXISTS to avoid NULL pitfall and
+-- allow idx_bookings_pro_status to do an index-only anti-join check.
+SELECT p.pro_id, p.full_name, p.rating
+FROM professionals p
+WHERE p.status = 'ACTIVE'
+  AND NOT EXISTS (SELECT 1 FROM bookings b
+                  WHERE b.pro_id = p.pro_id
+                    AND b.status = 'CANCELLED_BY_CUSTOMER');
+
+-- @R14
+-- Demand planning: Bengaluru bookings by category, weekday and hour of the scheduled slot
+-- Optimization: idx_bookings_city_service narrows to city_id = 1,
+-- then hash-joins with services.
+SELECT s.category_id, EXTRACT(ISODOW FROM b.scheduled_start) AS weekday, EXTRACT(HOUR FROM b.scheduled_start) AS hour, count(*) AS bookings
+FROM bookings b
+JOIN services s ON s.service_id = b.service_id
+WHERE b.city_id = 1
+GROUP BY 1, 2, 3
+ORDER BY 1, 2, 3;
+
+-- @R15
+-- Quality: professionals whose average rating in June 2026 is below 4.0 (at least 5 reviews)
+-- Optimization: idx_reviews_created provides range scan for June 2026.
+SELECT b.pro_id, round(avg(r.rating_for_pro), 2) AS avg_rating, count(*) AS reviews
+FROM reviews r
+JOIN bookings b ON b.booking_id = r.booking_id
+WHERE r.created_at >= '2026-06-01' AND r.created_at < '2026-07-01'
+GROUP BY b.pro_id
+HAVING count(*) >= 5 AND avg(r.rating_for_pro) < 4.0
+ORDER BY avg_rating;
+
+-- @R16
+-- Expansion: top 10 Mumbai pincodes by bookings in June 2026
+-- Optimization: idx_bookings_city_booked enables index scan on
+-- city_id = 2 AND booked_at range.
+SELECT pincode, count(*) AS bookings
+FROM bookings
+WHERE city_id = 2
+  AND booked_at >= '2026-06-01' AND booked_at < '2026-07-01'
+GROUP BY pincode
+ORDER BY bookings DESC
+LIMIT 10;
+
+-- @R17
+-- Retention: customers who booked the same category 3 or more times in 2026
+-- Optimization: idx_bookings_status_schedstart filters COMPLETED + 2026 range;
+-- idx_bookings_service joins to services.
+SELECT b.customer_id, s.category_id, count(*) AS bookings
+FROM bookings b
+JOIN services s ON s.service_id = b.service_id
+WHERE b.booked_at >= '2026-01-01' AND b.status = 'COMPLETED'
+GROUP BY b.customer_id, s.category_id
+HAVING count(*) >= 3
+ORDER BY bookings DESC, b.customer_id;
+
+-- @R18
+-- Quality: newest reviews complaining about lateness
+-- Optimization: idx_reviews_comment_trgm (GIN trigram) accelerates
+-- the ILIKE '%late%' pattern match.
+SELECT r.booking_id, r.rating_for_pro, r.comment, r.created_at
+FROM reviews r
+WHERE r.comment ILIKE '%late%'
+ORDER BY r.created_at DESC
+LIMIT 50;
+
+-- @R19
+-- City report: June 2026 completed jobs and last job date of every active Bengaluru professional
+-- Optimization: replaced TWO correlated Seq Scans on bookings (each scanned
+-- 150 000 rows × 357 loops = 107 M rows) with a single LEFT JOIN + aggregate.
+-- idx_professionals_city_status filters Bengaluru ACTIVE pros;
+-- idx_bookings_pro_status replaces the full-table correlated scans.
+SELECT p.pro_id, p.full_name,
+       count(*) FILTER (WHERE b.status = 'COMPLETED'
+                          AND b.scheduled_start >= '2026-06-01'
+                          AND b.scheduled_start <  '2026-07-01') AS june_jobs,
+       max(b.completed_at) AS last_job_at
+FROM professionals p
+LEFT JOIN bookings b ON b.pro_id = p.pro_id
+WHERE p.city_id = 1 AND p.status = 'ACTIVE'
+GROUP BY p.pro_id, p.full_name
+ORDER BY june_jobs DESC;
+
+-- @R20
+-- Finance: daily GMV and running total for June 2026
+-- Optimization: idx_bookings_status_schedstart filters COMPLETED + date range.
+SELECT day, gmv, sum(gmv) OVER (ORDER BY day) AS running_gmv
+FROM (
+    SELECT scheduled_start::date AS day, sum(price - discount) AS gmv
+    FROM bookings
+    WHERE status = 'COMPLETED'
+      AND scheduled_start::date BETWEEN '2026-06-01' AND '2026-06-30'
+    GROUP BY 1
+) d
+ORDER BY day;
+
+-- @R21
+-- Compliance: completed jobs done by a professional who is not skilled in that service's category
+-- Optimization: idx_bookings_pro_status (status = 'COMPLETED') +
+-- idx_pro_skills_cat_pro for NOT EXISTS anti-join.
+SELECT b.booking_id, b.pro_id, s.service_name
+FROM bookings b
+JOIN services s ON s.service_id = b.service_id
+WHERE b.status = 'COMPLETED'
+  AND NOT EXISTS (SELECT 1 FROM pro_skills ps WHERE ps.pro_id = b.pro_id AND ps.category_id = s.category_id)
+ORDER BY b.booking_id;
+
+-- @R22
+-- Support console: all bookings, newest first, page 4,001 (25 per page)
+-- Optimization: idx_bookings_booked_at_desc avoids a full sort + disk spill.
+-- The planner can use a backward index scan to skip to the offset.
+SELECT booking_id, customer_id, service_id, status, booked_at
+FROM bookings
+ORDER BY booked_at DESC
+OFFSET 100000
+LIMIT 25;
+
+-- @R23
+-- Booking detail page
+-- (Already fast with PK index; kept as-is.)
+SELECT b.*, s.service_name
+FROM bookings b
+JOIN services s ON s.service_id = b.service_id
+WHERE b.booking_id = 123456;
+
+-- @R24
+-- Finance: cancellation fees collected per month in 2026
+-- Optimization: idx_bookings_cancel_fee (partial) scans only rows with
+-- cancellation_fee > 0, with a leading scheduled_start column for the
+-- date range filter.
+SELECT date_trunc('month', scheduled_start) AS month, count(*) AS charged_cancellations, sum(cancellation_fee) AS fees
+FROM bookings
+WHERE cancellation_fee > 0
+  AND scheduled_start >= '2026-01-01'
+GROUP BY 1
+ORDER BY 1;
+
+-- @R25
+-- Capacity: utilisation (booked minutes ÷ available minutes) of Bengaluru professionals, 22–28 June 2026
+-- Optimization: replaced correlated Seq Scan subquery (357 loops × 150 000
+-- rows each) with a lateral or pre-aggregated JOIN.
+-- idx_pro_availability_date_pro narrows availability rows;
+-- idx_bookings_pro_status + idx_bookings_status_schedstart avoids full scan.
+SELECT a.pro_id,
+       a.available_min,
+       coalesce(bk.booked_min, 0) AS booked_min
+FROM (
+    SELECT pa.pro_id,
+           sum(EXTRACT(EPOCH FROM (pa.end_time - pa.start_time)) / 60) AS available_min
+    FROM pro_availability pa
+    JOIN professionals pr ON pr.pro_id = pa.pro_id AND pr.city_id = 1
+    WHERE pa.work_date BETWEEN '2026-06-22' AND '2026-06-28'
+    GROUP BY pa.pro_id
+) a
+LEFT JOIN (
+    SELECT b.pro_id,
+           sum(EXTRACT(EPOCH FROM (b.scheduled_end - b.scheduled_start)) / 60) AS booked_min
+    FROM bookings b
+    WHERE b.status = 'COMPLETED'
+      AND b.scheduled_start >= '2026-06-22' AND b.scheduled_start < '2026-06-29'
+    GROUP BY b.pro_id
+) bk ON bk.pro_id = a.pro_id
+ORDER BY booked_min DESC
+LIMIT 30;
+
+-- @W01
+-- Customer app: book an AC service for 3 July 2026, 11:00
+INSERT INTO bookings (booking_id, customer_id, service_id, city_id, pincode, booked_at, scheduled_start, scheduled_end,
+                      status, price, payment_method)
+VALUES (90000001, 226, 19, 1, '560034', '2026-07-01 09:00:00+05:30', '2026-07-03 11:00:00+05:30',
+        '2026-07-03 11:45:00+05:30', 'REQUESTED', 599.00, 'UPI');
+
+-- @W02
+-- Dispatch: give the oldest REQUESTED booking to professional 425
+-- Optimization: idx_bookings_status_sched lets the MIN subquery use an
+-- index-only scan instead of a full table scan.
+UPDATE bookings
+SET pro_id = 425, status = 'ASSIGNED'
+WHERE booking_id = (SELECT min(booking_id) FROM bookings WHERE status = 'REQUESTED');
+
+-- @W03
+-- Partner app: professional 425 finishes their job on 2 July 2026 and gets a ₹50 tip
+-- Optimization: idx_bookings_pro_status enables index scan on pro_id + status.
+UPDATE bookings
+SET status = 'COMPLETED', started_at = scheduled_start, completed_at = scheduled_end, tip = 50
+WHERE pro_id = 425 AND status = 'ASSIGNED'
+  AND scheduled_start >= '2026-07-02' AND scheduled_start < '2026-07-03';
+
+-- @W04
+-- Finance: create payouts for the week starting 29 June 2026 from completed jobs
+-- Optimization: idx_bookings_status_completed enables index scan.
+INSERT INTO payouts (payout_id, pro_id, week_start, jobs, gross_earnings, commission, net_payout, status)
+SELECT 90000000 + pro_id, pro_id, DATE '2026-06-29', count(*),
+       sum(price - discount + coalesce(tip, 0)),
+       round(sum(price - discount) * 0.20, 2),
+       sum(price - discount + coalesce(tip, 0)) - round(sum(price - discount) * 0.20, 2),
+       'PENDING'
+FROM bookings
+WHERE status = 'COMPLETED'
+  AND completed_at >= '2026-06-29' AND completed_at < '2026-07-06'
+GROUP BY pro_id;
+
+-- @W05
+-- Operations: assigned jobs whose slot ended before 2 July 2026 without starting become NO_SHOW
+-- Optimization: idx_bookings_status_sched narrows to status = 'ASSIGNED'.
+UPDATE bookings
+SET status = 'NO_SHOW'
+WHERE status = 'ASSIGNED'
+  AND scheduled_end < '2026-07-02 00:00:00+05:30'
+  AND started_at IS NULL;
+
+-- @END
+ROLLBACK;

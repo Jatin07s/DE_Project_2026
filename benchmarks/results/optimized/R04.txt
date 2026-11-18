@@ -1,0 +1,93 @@
+=== R04 run 1 ===
+Sort  (cost=43.65..43.65 rows=1 width=58) (actual time=0.092..0.093 rows=1.00 loops=1)
+  Sort Key: b.scheduled_start
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=19 read=8
+  ->  Hash Join  (cost=41.80..43.64 rows=1 width=58) (actual time=0.081..0.084 rows=1.00 loops=1)
+        Hash Cond: (s.service_id = b.service_id)
+        Buffers: shared hit=16 read=8
+        ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.004 rows=60.00 loops=1)
+              Buffers: shared hit=1
+        ->  Hash  (cost=41.79..41.79 rows=1 width=46) (actual time=0.073..0.073 rows=1.00 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              Buffers: shared hit=15 read=8
+              ->  Bitmap Heap Scan on bookings b  (cost=37.77..41.79 rows=1 width=46) (actual time=0.068..0.068 rows=1.00 loops=1)
+                    Recheck Cond: ((pro_id = 425) AND (scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+                    Heap Blocks: exact=1
+                    Buffers: shared hit=15 read=8
+                    ->  BitmapAnd  (cost=37.77..37.77 rows=1 width=0) (actual time=0.061..0.061 rows=0.00 loops=1)
+                          Buffers: shared hit=14 read=8
+                          ->  Bitmap Index Scan on idx_bookings_pro_status  (cost=0.00..4.76 rows=62 width=0) (actual time=0.007..0.007 rows=109.00 loops=1)
+                                Index Cond: (pro_id = 425)
+                                Index Searches: 1
+                                Buffers: shared hit=2
+                          ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..32.76 rows=182 width=0) (actual time=0.051..0.051 rows=136.00 loops=1)
+                                Index Cond: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+                                Index Searches: 5
+                                Buffers: shared hit=12 read=8
+Planning:
+  Buffers: shared hit=453
+Planning Time: 0.706 ms
+Execution Time: 0.118 ms
+=== R04 run 2 ===
+Sort  (cost=43.65..43.65 rows=1 width=58) (actual time=0.065..0.065 rows=1.00 loops=1)
+  Sort Key: b.scheduled_start
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=27
+  ->  Hash Join  (cost=41.80..43.64 rows=1 width=58) (actual time=0.055..0.057 rows=1.00 loops=1)
+        Hash Cond: (s.service_id = b.service_id)
+        Buffers: shared hit=24
+        ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.003 rows=60.00 loops=1)
+              Buffers: shared hit=1
+        ->  Hash  (cost=41.79..41.79 rows=1 width=46) (actual time=0.047..0.048 rows=1.00 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              Buffers: shared hit=23
+              ->  Bitmap Heap Scan on bookings b  (cost=37.77..41.79 rows=1 width=46) (actual time=0.043..0.043 rows=1.00 loops=1)
+                    Recheck Cond: ((pro_id = 425) AND (scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+                    Heap Blocks: exact=1
+                    Buffers: shared hit=23
+                    ->  BitmapAnd  (cost=37.77..37.77 rows=1 width=0) (actual time=0.038..0.038 rows=0.00 loops=1)
+                          Buffers: shared hit=22
+                          ->  Bitmap Index Scan on idx_bookings_pro_status  (cost=0.00..4.76 rows=62 width=0) (actual time=0.007..0.007 rows=109.00 loops=1)
+                                Index Cond: (pro_id = 425)
+                                Index Searches: 1
+                                Buffers: shared hit=2
+                          ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..32.76 rows=182 width=0) (actual time=0.029..0.029 rows=136.00 loops=1)
+                                Index Cond: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+                                Index Searches: 5
+                                Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=453
+Planning Time: 0.708 ms
+Execution Time: 0.089 ms
+=== R04 run 3 ===
+Sort  (cost=43.65..43.65 rows=1 width=58) (actual time=0.064..0.065 rows=1.00 loops=1)
+  Sort Key: b.scheduled_start
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=27
+  ->  Hash Join  (cost=41.80..43.64 rows=1 width=58) (actual time=0.054..0.056 rows=1.00 loops=1)
+        Hash Cond: (s.service_id = b.service_id)
+        Buffers: shared hit=24
+        ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.002 rows=60.00 loops=1)
+              Buffers: shared hit=1
+        ->  Hash  (cost=41.79..41.79 rows=1 width=46) (actual time=0.046..0.047 rows=1.00 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              Buffers: shared hit=23
+              ->  Bitmap Heap Scan on bookings b  (cost=37.77..41.79 rows=1 width=46) (actual time=0.042..0.042 rows=1.00 loops=1)
+                    Recheck Cond: ((pro_id = 425) AND (scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+                    Heap Blocks: exact=1
+                    Buffers: shared hit=23
+                    ->  BitmapAnd  (cost=37.77..37.77 rows=1 width=0) (actual time=0.038..0.038 rows=0.00 loops=1)
+                          Buffers: shared hit=22
+                          ->  Bitmap Index Scan on idx_bookings_pro_status  (cost=0.00..4.76 rows=62 width=0) (actual time=0.006..0.006 rows=109.00 loops=1)
+                                Index Cond: (pro_id = 425)
+                                Index Searches: 1
+                                Buffers: shared hit=2
+                          ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..32.76 rows=182 width=0) (actual time=0.029..0.029 rows=136.00 loops=1)
+                                Index Cond: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+                                Index Searches: 5
+                                Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=453
+Planning Time: 0.626 ms
+Execution Time: 0.087 ms

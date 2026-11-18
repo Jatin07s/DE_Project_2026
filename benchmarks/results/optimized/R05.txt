@@ -1,0 +1,27 @@
+=== R05 run 1 ===
+Index Scan using idx_bookings_status_schedstart on bookings  (cost=0.42..273.45 rows=95 width=24) (actual time=0.019..0.045 rows=46.00 loops=1)
+  Index Cond: (((status)::text = 'REQUESTED'::text) AND (scheduled_start < '2026-07-02 12:00:00+05:30'::timestamp with time zone))
+  Index Searches: 1
+  Buffers: shared hit=46
+Planning:
+  Buffers: shared hit=299
+Planning Time: 0.500 ms
+Execution Time: 0.055 ms
+=== R05 run 2 ===
+Index Scan using idx_bookings_status_schedstart on bookings  (cost=0.42..273.45 rows=95 width=24) (actual time=0.011..0.029 rows=46.00 loops=1)
+  Index Cond: (((status)::text = 'REQUESTED'::text) AND (scheduled_start < '2026-07-02 12:00:00+05:30'::timestamp with time zone))
+  Index Searches: 1
+  Buffers: shared hit=46
+Planning:
+  Buffers: shared hit=299
+Planning Time: 0.480 ms
+Execution Time: 0.039 ms
+=== R05 run 3 ===
+Index Scan using idx_bookings_status_schedstart on bookings  (cost=0.42..273.45 rows=95 width=24) (actual time=0.024..0.087 rows=46.00 loops=1)
+  Index Cond: (((status)::text = 'REQUESTED'::text) AND (scheduled_start < '2026-07-02 12:00:00+05:30'::timestamp with time zone))
+  Index Searches: 1
+  Buffers: shared hit=46
+Planning:
+  Buffers: shared hit=299
+Planning Time: 3.160 ms
+Execution Time: 0.106 ms

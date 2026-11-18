@@ -1,0 +1,63 @@
+=== R10 run 1 ===
+Limit  (cost=5058.73..5058.78 rows=20 width=44) (actual time=8.638..8.640 rows=20.00 loops=1)
+  Buffers: shared hit=5507 read=52
+  ->  Sort  (cost=5058.73..5060.57 rows=736 width=44) (actual time=8.638..8.638 rows=20.00 loops=1)
+        Sort Key: (round(((100.0 * (count(*) FILTER (WHERE ((status)::text = 'NO_SHOW'::text)))::numeric) / (count(*))::numeric), 2)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=5507 read=52
+        ->  GroupAggregate  (cost=0.29..5039.14 rows=736 width=44) (actual time=0.064..8.494 rows=1849.00 loops=1)
+              Group Key: pro_id
+              Filter: (count(*) >= 20)
+              Rows Removed by Filter: 371
+              Buffers: shared hit=5504 read=52
+              ->  Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.29..3561.61 rows=144075 width=15) (actual time=0.026..4.559 rows=143858.00 loops=1)
+                    Index Cond: (pro_id IS NOT NULL)
+                    Heap Fetches: 5502
+                    Index Searches: 1
+                    Buffers: shared hit=5504 read=52
+Planning:
+  Buffers: shared hit=315
+Planning Time: 0.476 ms
+Execution Time: 8.665 ms
+=== R10 run 2 ===
+Limit  (cost=5058.73..5058.78 rows=20 width=44) (actual time=8.483..8.485 rows=20.00 loops=1)
+  Buffers: shared hit=5559
+  ->  Sort  (cost=5058.73..5060.57 rows=736 width=44) (actual time=8.483..8.483 rows=20.00 loops=1)
+        Sort Key: (round(((100.0 * (count(*) FILTER (WHERE ((status)::text = 'NO_SHOW'::text)))::numeric) / (count(*))::numeric), 2)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=5559
+        ->  GroupAggregate  (cost=0.29..5039.14 rows=736 width=44) (actual time=0.058..8.348 rows=1849.00 loops=1)
+              Group Key: pro_id
+              Filter: (count(*) >= 20)
+              Rows Removed by Filter: 371
+              Buffers: shared hit=5556
+              ->  Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.29..3561.61 rows=144075 width=15) (actual time=0.023..4.466 rows=143858.00 loops=1)
+                    Index Cond: (pro_id IS NOT NULL)
+                    Heap Fetches: 5502
+                    Index Searches: 1
+                    Buffers: shared hit=5556
+Planning:
+  Buffers: shared hit=315
+Planning Time: 0.454 ms
+Execution Time: 8.506 ms
+=== R10 run 3 ===
+Limit  (cost=5058.73..5058.78 rows=20 width=44) (actual time=8.392..8.393 rows=20.00 loops=1)
+  Buffers: shared hit=5559
+  ->  Sort  (cost=5058.73..5060.57 rows=736 width=44) (actual time=8.391..8.392 rows=20.00 loops=1)
+        Sort Key: (round(((100.0 * (count(*) FILTER (WHERE ((status)::text = 'NO_SHOW'::text)))::numeric) / (count(*))::numeric), 2)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=5559
+        ->  GroupAggregate  (cost=0.29..5039.14 rows=736 width=44) (actual time=0.060..8.261 rows=1849.00 loops=1)
+              Group Key: pro_id
+              Filter: (count(*) >= 20)
+              Rows Removed by Filter: 371
+              Buffers: shared hit=5556
+              ->  Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.29..3561.61 rows=144075 width=15) (actual time=0.025..4.388 rows=143858.00 loops=1)
+                    Index Cond: (pro_id IS NOT NULL)
+                    Heap Fetches: 5502
+                    Index Searches: 1
+                    Buffers: shared hit=5556
+Planning:
+  Buffers: shared hit=315
+Planning Time: 0.463 ms
+Execution Time: 8.415 ms
