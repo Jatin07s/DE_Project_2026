@@ -1,7 +1,4 @@
--- CP1: Urban Company Home Services, PostgreSQL 15+
--- Columns, key cardinality and constraint domains audited against all 11 seed CSVs.
--- PostgreSQL import must still be executed and recorded on your local machine.
--- Do NOT add tuning indexes in CP1. PK and UNIQUE create implicit indexes.
+
 
 CREATE SCHEMA IF NOT EXISTS uc;
 SET search_path TO uc, public;
@@ -85,7 +82,7 @@ CREATE TABLE pro_availability (
     work_date    DATE NOT NULL,
     start_time   TIME NOT NULL,
     end_time     TIME NOT NULL,
-    -- Verified: unique (pro_id, work_date) across all 70,407 CSV rows.
+    
     CONSTRAINT pk_pro_availability PRIMARY KEY (pro_id, work_date),
     CONSTRAINT fk_pro_availability_pro FOREIGN KEY (pro_id)
         REFERENCES professionals(pro_id) ON DELETE CASCADE,

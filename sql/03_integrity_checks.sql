@@ -1,7 +1,6 @@
--- CP1 helper: execute AFTER schema and data import.
+
 SET search_path TO uc, public;
 
--- 1. Expected vs observed row counts from faculty README.
 WITH actual(table_name, actual_rows) AS (
  SELECT 'cities',count(*) FROM cities UNION ALL
  SELECT 'service_categories',count(*) FROM service_categories UNION ALL
@@ -25,7 +24,7 @@ SELECT a.table_name, e.expected_rows, a.actual_rows,
 FROM actual a JOIN expected e USING(table_name)
 ORDER BY a.table_name;
 
--- 2. Overlapping active/assigned jobs for the SAME professional.
+
 SELECT count(*) AS overlapping_pairs
 FROM bookings a JOIN bookings b
   ON a.pro_id=b.pro_id AND a.booking_id<b.booking_id
@@ -35,7 +34,7 @@ WHERE a.pro_id IS NOT NULL
   AND a.status IN ('ASSIGNED','IN_PROGRESS')
   AND b.status IN ('ASSIGNED','IN_PROGRESS');
 
--- 3. Completed jobs assigned to someone without certified category.
+
 SELECT count(*) AS completed_without_skill
 FROM bookings b JOIN services s USING(service_id)
 WHERE b.status='COMPLETED'
@@ -44,8 +43,6 @@ WHERE b.status='COMPLETED'
     WHERE ps.pro_id=b.pro_id AND ps.category_id=s.category_id
   );
 
--- 4. Check scheduled June/July 2026 jobs outside a *recorded* shift.
--- Historical bookings from earlier months lack availability coverage.
 SELECT count(*) AS jobs_outside_recorded_shift
 FROM bookings b
 JOIN pro_availability a
@@ -56,7 +53,7 @@ WHERE b.status IN ('ASSIGNED','IN_PROGRESS','COMPLETED')
      OR (b.scheduled_end AT TIME ZONE 'Asia/Kolkata')::date <> a.work_date )
   AND a.work_date BETWEEN DATE '2026-06-01' AND DATE '2026-07-31';
 
--- 5. Count June/July jobs with NO availability record at all.
+
 SELECT count(*) AS missing_shift_record
 FROM bookings b
 WHERE b.pro_id IS NOT NULL
@@ -68,13 +65,13 @@ WHERE b.pro_id IS NOT NULL
       AND a.work_date=(b.scheduled_start AT TIME ZONE 'Asia/Kolkata')::date
   );
 
--- 6. Payout internal arithmetic and Monday week start: must be 0 (enforced).
+
 SELECT count(*) AS invalid_payouts
 FROM payouts
 WHERE net_payout <> gross_earnings - commission
    OR EXTRACT(ISODOW FROM week_start) <> 1;
 
--- 7. Informative null patterns for refining constraints.
+
 SELECT status, count(*) AS bookings,
        count(*) FILTER (WHERE pro_id IS NULL) AS without_pro,
        count(*) FILTER (WHERE started_at IS NULL) AS without_start,
