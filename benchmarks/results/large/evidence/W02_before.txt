@@ -1,0 +1,66 @@
+=== W02 run 1 ===
+Update on bookings  (cost=85.44..93.46 rows=0 width=0) (actual time=294.535..294.536 rows=0 loops=1)
+  Buffers: shared hit=305 read=58602 dirtied=13 written=18
+  InitPlan 2 (returns $1)
+    ->  Result  (cost=85.00..85.01 rows=1 width=8) (actual time=294.115..294.115 rows=1 loops=1)
+          Buffers: shared hit=264 read=58546 written=18
+          InitPlan 1 (returns $0)
+            ->  Limit  (cost=0.43..85.00 rows=1 width=8) (actual time=294.113..294.113 rows=1 loops=1)
+                  Buffers: shared hit=264 read=58546 written=18
+                  ->  Index Scan using bookings_pkey on bookings bookings_1  (cost=0.43..143776.39 rows=1700 width=8) (actual time=294.112..294.112 rows=1 loops=1)
+                        Index Cond: (booking_id IS NOT NULL)
+                        Filter: ((status)::text = 'REQUESTED'::text)
+                        Rows Removed by Filter: 2973320
+                        Buffers: shared hit=264 read=58546 written=18
+  ->  Index Scan using bookings_pkey on bookings  (cost=0.43..8.45 rows=1 width=92) (actual time=294.138..294.139 rows=1 loops=1)
+        Index Cond: (booking_id = $1)
+        Buffers: shared hit=266 read=58548 written=18
+Planning:
+  Buffers: shared hit=292
+Planning Time: 0.607 ms
+Trigger for constraint fk_bookings_pro: time=0.372 calls=1
+Execution Time: 295.063 ms
+=== W02 run 2 ===
+Update on bookings  (cost=85.44..93.46 rows=0 width=0) (actual time=281.924..281.925 rows=0 loops=1)
+  Buffers: shared hit=308 read=58598 dirtied=13 written=3
+  InitPlan 2 (returns $1)
+    ->  Result  (cost=85.00..85.01 rows=1 width=8) (actual time=281.361..281.361 rows=1 loops=1)
+          Buffers: shared hit=267 read=58545 dirtied=2 written=3
+          InitPlan 1 (returns $0)
+            ->  Limit  (cost=0.43..85.00 rows=1 width=8) (actual time=281.359..281.359 rows=1 loops=1)
+                  Buffers: shared hit=267 read=58545 dirtied=2 written=3
+                  ->  Index Scan using bookings_pkey on bookings bookings_1  (cost=0.43..143776.39 rows=1700 width=8) (actual time=281.358..281.359 rows=1 loops=1)
+                        Index Cond: (booking_id IS NOT NULL)
+                        Filter: ((status)::text = 'REQUESTED'::text)
+                        Rows Removed by Filter: 2973320
+                        Buffers: shared hit=267 read=58545 dirtied=2 written=3
+  ->  Index Scan using bookings_pkey on bookings  (cost=0.43..8.45 rows=1 width=92) (actual time=281.380..281.381 rows=1 loops=1)
+        Index Cond: (booking_id = $1)
+        Buffers: shared hit=271 read=58547 dirtied=2 written=3
+Planning:
+  Buffers: shared hit=254 read=38
+Planning Time: 0.579 ms
+Trigger for constraint fk_bookings_pro: time=0.256 calls=1
+Execution Time: 282.262 ms
+=== W02 run 3 ===
+Update on bookings  (cost=85.44..93.46 rows=0 width=0) (actual time=285.673..285.673 rows=0 loops=1)
+  Buffers: shared hit=308 read=58600 dirtied=14 written=13
+  InitPlan 2 (returns $1)
+    ->  Result  (cost=85.00..85.01 rows=1 width=8) (actual time=285.333..285.333 rows=1 loops=1)
+          Buffers: shared hit=265 read=58547 dirtied=2 written=13
+          InitPlan 1 (returns $0)
+            ->  Limit  (cost=0.43..85.00 rows=1 width=8) (actual time=285.331..285.331 rows=1 loops=1)
+                  Buffers: shared hit=265 read=58547 dirtied=2 written=13
+                  ->  Index Scan using bookings_pkey on bookings bookings_1  (cost=0.43..143776.39 rows=1700 width=8) (actual time=285.330..285.330 rows=1 loops=1)
+                        Index Cond: (booking_id IS NOT NULL)
+                        Filter: ((status)::text = 'REQUESTED'::text)
+                        Rows Removed by Filter: 2973320
+                        Buffers: shared hit=265 read=58547 dirtied=2 written=13
+  ->  Index Scan using bookings_pkey on bookings  (cost=0.43..8.45 rows=1 width=92) (actual time=285.350..285.351 rows=1 loops=1)
+        Index Cond: (booking_id = $1)
+        Buffers: shared hit=269 read=58549 dirtied=2 written=13
+Planning:
+  Buffers: shared hit=254 read=38
+Planning Time: 0.598 ms
+Trigger for constraint fk_bookings_pro: time=0.251 calls=1
+Execution Time: 286.006 ms

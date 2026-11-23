@@ -1,48 +1,48 @@
 === R23 run 1 ===
-Hash Join  (cost=8.46..10.23 rows=1 width=118) (actual time=0.025..0.029 rows=1 loops=1)
+Hash Join  (cost=8.46..10.23 rows=1 width=118) (actual time=0.429..0.433 rows=1 loops=1)
   Hash Cond: (s.service_id = b.service_id)
   Buffers: shared hit=4 read=4
-  ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.004 rows=60 loops=1)
+  ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.003 rows=60 loops=1)
         Buffers: shared hit=1
-  ->  Hash  (cost=8.45..8.45 rows=1 width=102) (actual time=0.018..0.018 rows=1 loops=1)
+  ->  Hash  (cost=8.45..8.45 rows=1 width=102) (actual time=0.423..0.423 rows=1 loops=1)
         Buckets: 1024  Batches: 1  Memory Usage: 9kB
         Buffers: shared hit=3 read=4
-        ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..8.45 rows=1 width=102) (actual time=0.015..0.016 rows=1 loops=1)
+        ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..8.45 rows=1 width=102) (actual time=0.419..0.419 rows=1 loops=1)
               Index Cond: (booking_id = 123456)
               Buffers: shared hit=3 read=4
 Planning:
-  Buffers: shared hit=475 read=1 dirtied=2
-Planning Time: 0.698 ms
-Execution Time: 0.057 ms
+  Buffers: shared hit=486 read=1 dirtied=2
+Planning Time: 0.705 ms
+Execution Time: 0.460 ms
 === R23 run 2 ===
-Hash Join  (cost=8.46..10.23 rows=1 width=118) (actual time=0.017..0.021 rows=1 loops=1)
+Hash Join  (cost=8.46..10.23 rows=1 width=118) (actual time=0.031..0.035 rows=1 loops=1)
   Hash Cond: (s.service_id = b.service_id)
   Buffers: shared hit=8
-  ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.003 rows=60 loops=1)
+  ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.003..0.005 rows=60 loops=1)
         Buffers: shared hit=1
-  ->  Hash  (cost=8.45..8.45 rows=1 width=102) (actual time=0.011..0.011 rows=1 loops=1)
+  ->  Hash  (cost=8.45..8.45 rows=1 width=102) (actual time=0.021..0.021 rows=1 loops=1)
+        Buckets: 1024  Batches: 1  Memory Usage: 9kB
+        Buffers: shared hit=7
+        ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..8.45 rows=1 width=102) (actual time=0.017..0.017 rows=1 loops=1)
+              Index Cond: (booking_id = 123456)
+              Buffers: shared hit=7
+Planning:
+  Buffers: shared hit=487
+Planning Time: 0.872 ms
+Execution Time: 0.076 ms
+=== R23 run 3 ===
+Hash Join  (cost=8.46..10.23 rows=1 width=118) (actual time=0.019..0.023 rows=1 loops=1)
+  Hash Cond: (s.service_id = b.service_id)
+  Buffers: shared hit=8
+  ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.002..0.004 rows=60 loops=1)
+        Buffers: shared hit=1
+  ->  Hash  (cost=8.45..8.45 rows=1 width=102) (actual time=0.012..0.012 rows=1 loops=1)
         Buckets: 1024  Batches: 1  Memory Usage: 9kB
         Buffers: shared hit=7
         ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..8.45 rows=1 width=102) (actual time=0.009..0.009 rows=1 loops=1)
               Index Cond: (booking_id = 123456)
               Buffers: shared hit=7
 Planning:
-  Buffers: shared hit=472
-Planning Time: 0.616 ms
-Execution Time: 0.047 ms
-=== R23 run 3 ===
-Hash Join  (cost=8.46..10.23 rows=1 width=118) (actual time=0.016..0.019 rows=1 loops=1)
-  Hash Cond: (s.service_id = b.service_id)
-  Buffers: shared hit=8
-  ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.001..0.003 rows=60 loops=1)
-        Buffers: shared hit=1
-  ->  Hash  (cost=8.45..8.45 rows=1 width=102) (actual time=0.010..0.010 rows=1 loops=1)
-        Buckets: 1024  Batches: 1  Memory Usage: 9kB
-        Buffers: shared hit=7
-        ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..8.45 rows=1 width=102) (actual time=0.008..0.008 rows=1 loops=1)
-              Index Cond: (booking_id = 123456)
-              Buffers: shared hit=7
-Planning:
-  Buffers: shared hit=472
-Planning Time: 0.570 ms
-Execution Time: 0.045 ms
+  Buffers: shared hit=487
+Planning Time: 0.670 ms
+Execution Time: 0.053 ms

@@ -1,48 +1,48 @@
 === R24 run 1 ===
-Sort  (cost=2068.07..2095.36 rows=10917 width=48) (actual time=23.958..23.958 rows=7 loops=1)
+Sort  (cost=2275.71..2304.37 rows=11465 width=48) (actual time=23.487..23.487 rows=7 loops=1)
   Sort Key: (date_trunc('month'::text, scheduled_start))
   Sort Method: quicksort  Memory: 25kB
-  Buffers: shared hit=20784 read=3019
-  ->  HashAggregate  (cost=1172.09..1335.85 rows=10917 width=48) (actual time=23.902..23.949 rows=7 loops=1)
+  Buffers: shared hit=20331 read=3472
+  ->  HashAggregate  (cost=1330.71..1502.68 rows=11465 width=48) (actual time=23.436..23.479 rows=7 loops=1)
         Group Key: date_trunc('month'::text, scheduled_start)
         Batches: 1  Memory Usage: 409kB
-        Buffers: shared hit=20781 read=3019
-        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..999.66 rows=22991 width=11) (actual time=0.022..21.485 rows=23940 loops=1)
+        Buffers: shared hit=20328 read=3472
+        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..1131.83 rows=26517 width=11) (actual time=0.345..21.349 rows=23940 loops=1)
               Index Cond: (scheduled_start >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
-              Buffers: shared hit=20781 read=3019
+              Buffers: shared hit=20328 read=3472
 Planning:
-  Buffers: shared hit=303
-Planning Time: 0.432 ms
-Execution Time: 24.035 ms
+  Buffers: shared hit=318
+Planning Time: 0.507 ms
+Execution Time: 23.556 ms
 === R24 run 2 ===
-Sort  (cost=2068.07..2095.36 rows=10917 width=48) (actual time=17.324..17.324 rows=7 loops=1)
+Sort  (cost=2275.71..2304.37 rows=11465 width=48) (actual time=16.557..16.558 rows=7 loops=1)
   Sort Key: (date_trunc('month'::text, scheduled_start))
   Sort Method: quicksort  Memory: 25kB
   Buffers: shared hit=23803
-  ->  HashAggregate  (cost=1172.09..1335.85 rows=10917 width=48) (actual time=17.278..17.318 rows=7 loops=1)
+  ->  HashAggregate  (cost=1330.71..1502.68 rows=11465 width=48) (actual time=16.512..16.549 rows=7 loops=1)
         Group Key: date_trunc('month'::text, scheduled_start)
         Batches: 1  Memory Usage: 409kB
         Buffers: shared hit=23800
-        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..999.66 rows=22991 width=11) (actual time=0.010..15.280 rows=23940 loops=1)
+        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..1131.83 rows=26517 width=11) (actual time=0.013..14.714 rows=23940 loops=1)
               Index Cond: (scheduled_start >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
               Buffers: shared hit=23800
 Planning:
-  Buffers: shared hit=303
-Planning Time: 0.412 ms
-Execution Time: 17.377 ms
+  Buffers: shared hit=318
+Planning Time: 0.561 ms
+Execution Time: 16.621 ms
 === R24 run 3 ===
-Sort  (cost=2068.07..2095.36 rows=10917 width=48) (actual time=16.968..16.968 rows=7 loops=1)
+Sort  (cost=2275.71..2304.37 rows=11465 width=48) (actual time=15.280..15.280 rows=7 loops=1)
   Sort Key: (date_trunc('month'::text, scheduled_start))
   Sort Method: quicksort  Memory: 25kB
   Buffers: shared hit=23803
-  ->  HashAggregate  (cost=1172.09..1335.85 rows=10917 width=48) (actual time=16.925..16.962 rows=7 loops=1)
+  ->  HashAggregate  (cost=1330.71..1502.68 rows=11465 width=48) (actual time=15.240..15.274 rows=7 loops=1)
         Group Key: date_trunc('month'::text, scheduled_start)
         Batches: 1  Memory Usage: 409kB
         Buffers: shared hit=23800
-        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..999.66 rows=22991 width=11) (actual time=0.012..15.119 rows=23940 loops=1)
+        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..1131.83 rows=26517 width=11) (actual time=0.011..13.493 rows=23940 loops=1)
               Index Cond: (scheduled_start >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
               Buffers: shared hit=23800
 Planning:
-  Buffers: shared hit=303
-Planning Time: 0.436 ms
-Execution Time: 17.023 ms
+  Buffers: shared hit=318
+Planning Time: 0.459 ms
+Execution Time: 15.332 ms
