@@ -1,108 +1,108 @@
 === R15 run 1 ===
-Sort  (cost=80062.91..80072.98 rows=4028 width=44) (actual time=134.384..134.499 rows=1885 loops=1)
+Sort  (cost=80185.90..80195.73 rows=3933 width=44) (actual time=143.326..143.432 rows=1885 loops=1)
   Sort Key: (round(avg(r.rating_for_pro), 2))
   Sort Method: quicksort  Memory: 137kB
-  Buffers: shared hit=97774 read=36822
-  ->  Finalize HashAggregate  (cost=79177.27..79821.71 rows=4028 width=44) (actual time=130.497..134.260 rows=1885 loops=1)
+  Buffers: shared hit=97774 read=36965
+  ->  Finalize HashAggregate  (cost=79321.86..79951.07 rows=3933 width=44) (actual time=139.201..143.182 rows=1885 loops=1)
         Group Key: b.pro_id
         Filter: ((count(*) >= 5) AND (avg(r.rating_for_pro) < 4.0))
         Batches: 1  Memory Usage: 6673kB
         Rows Removed by Filter: 31541
-        Buffers: shared hit=97771 read=36822
-        ->  Gather  (cost=71331.97..78654.25 rows=69736 width=44) (actual time=120.232..123.157 rows=58230 loops=1)
+        Buffers: shared hit=97771 read=36965
+        ->  Gather  (cost=71476.56..78798.84 rows=69736 width=44) (actual time=129.363..132.287 rows=58347 loops=1)
               Workers Planned: 2
               Workers Launched: 2
-              Buffers: shared hit=97771 read=36822
-              ->  Partial HashAggregate  (cost=70331.97..70680.65 rows=34868 width=44) (actual time=118.453..119.692 rows=19410 loops=3)
+              Buffers: shared hit=97771 read=36965
+              ->  Partial HashAggregate  (cost=70476.56..70825.24 rows=34868 width=44) (actual time=127.501..128.795 rows=19449 loops=3)
                     Group Key: b.pro_id
                     Batches: 1  Memory Usage: 4625kB
-                    Buffers: shared hit=97771 read=36822
+                    Buffers: shared hit=97771 read=36965
                     Worker 0:  Batches: 1  Memory Usage: 4625kB
-                    Worker 1:  Batches: 1  Memory Usage: 4369kB
-                    ->  Parallel Hash Join  (cost=3312.50..70070.46 rows=34868 width=6) (actual time=30.312..114.122 rows=28168 loops=3)
+                    Worker 1:  Batches: 1  Memory Usage: 4625kB
+                    ->  Parallel Hash Join  (cost=3312.50..70215.05 rows=34868 width=6) (actual time=29.994..123.028 rows=28168 loops=3)
                           Hash Cond: (b.booking_id = r.booking_id)
-                          Buffers: shared hit=97771 read=36822
-                          ->  Parallel Seq Scan on bookings b  (cost=0.00..63477.39 rows=1249739 width=12) (actual time=0.005..41.839 rows=1000000 loops=3)
-                                Buffers: shared hit=15123 read=35857
-                          ->  Parallel Hash  (cost=2697.19..2697.19 rows=49225 width=10) (actual time=20.636..20.636 rows=28168 loops=3)
-                                Buckets: 131072  Batches: 1  Memory Usage: 5024kB
+                          Buffers: shared hit=97771 read=36965
+                          ->  Parallel Seq Scan on bookings b  (cost=0.00..63621.65 rows=1249865 width=12) (actual time=0.021..46.199 rows=1000000 loops=3)
+                                Buffers: shared hit=15123 read=36000
+                          ->  Parallel Hash  (cost=2697.19..2697.19 rows=49225 width=10) (actual time=19.258..19.258 rows=28168 loops=3)
+                                Buckets: 131072  Batches: 1  Memory Usage: 5056kB
                                 Buffers: shared hit=82618 read=965
-                                ->  Parallel Index Scan using idx_reviews_created on reviews r  (cost=0.43..2697.19 rows=49225 width=10) (actual time=0.249..17.697 rows=28168 loops=3)
+                                ->  Parallel Index Scan using idx_reviews_created on reviews r  (cost=0.43..2697.19 rows=49225 width=10) (actual time=0.417..17.010 rows=28168 loops=3)
                                       Index Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
                                       Buffers: shared hit=82618 read=965
 Planning:
-  Buffers: shared hit=432 read=67
-Planning Time: 2.549 ms
-Execution Time: 134.801 ms
+  Buffers: shared hit=433 read=67
+Planning Time: 3.006 ms
+Execution Time: 143.688 ms
 === R15 run 2 ===
-Sort  (cost=80062.91..80072.98 rows=4028 width=44) (actual time=114.231..114.344 rows=1885 loops=1)
+Sort  (cost=80185.90..80195.73 rows=3933 width=44) (actual time=131.149..131.291 rows=1885 loops=1)
   Sort Key: (round(avg(r.rating_for_pro), 2))
   Sort Method: quicksort  Memory: 137kB
-  Buffers: shared hit=98706 read=35890
-  ->  Finalize HashAggregate  (cost=79177.27..79821.71 rows=4028 width=44) (actual time=110.537..114.107 rows=1885 loops=1)
+  Buffers: shared hit=98738 read=36000
+  ->  Finalize HashAggregate  (cost=79321.86..79951.07 rows=3933 width=44) (actual time=126.903..131.051 rows=1885 loops=1)
         Group Key: b.pro_id
         Filter: ((count(*) >= 5) AND (avg(r.rating_for_pro) < 4.0))
         Batches: 1  Memory Usage: 6673kB
         Rows Removed by Filter: 31541
-        Buffers: shared hit=98703 read=35890
-        ->  Gather  (cost=71331.97..78654.25 rows=69736 width=44) (actual time=100.873..103.676 rows=58296 loops=1)
+        Buffers: shared hit=98735 read=36000
+        ->  Gather  (cost=71476.56..78798.84 rows=69736 width=44) (actual time=116.095..119.066 rows=58241 loops=1)
               Workers Planned: 2
               Workers Launched: 2
-              Buffers: shared hit=98703 read=35890
-              ->  Partial HashAggregate  (cost=70331.97..70680.65 rows=34868 width=44) (actual time=99.297..100.420 rows=19432 loops=3)
+              Buffers: shared hit=98735 read=36000
+              ->  Partial HashAggregate  (cost=70476.56..70825.24 rows=34868 width=44) (actual time=114.583..115.886 rows=19414 loops=3)
                     Group Key: b.pro_id
                     Batches: 1  Memory Usage: 4625kB
-                    Buffers: shared hit=98703 read=35890
+                    Buffers: shared hit=98735 read=36000
                     Worker 0:  Batches: 1  Memory Usage: 4625kB
                     Worker 1:  Batches: 1  Memory Usage: 4625kB
-                    ->  Parallel Hash Join  (cost=3312.50..70070.46 rows=34868 width=6) (actual time=15.422..95.330 rows=28168 loops=3)
+                    ->  Parallel Hash Join  (cost=3312.50..70215.05 rows=34868 width=6) (actual time=16.906..109.780 rows=28168 loops=3)
                           Hash Cond: (b.booking_id = r.booking_id)
-                          Buffers: shared hit=98703 read=35890
-                          ->  Parallel Seq Scan on bookings b  (cost=0.00..63477.39 rows=1249739 width=12) (actual time=0.003..40.979 rows=1000000 loops=3)
-                                Buffers: shared hit=15090 read=35890
-                          ->  Parallel Hash  (cost=2697.19..2697.19 rows=49225 width=10) (actual time=6.657..6.657 rows=28168 loops=3)
-                                Buckets: 131072  Batches: 1  Memory Usage: 5024kB
-                                Buffers: shared hit=83583
-                                ->  Parallel Index Scan using idx_reviews_created on reviews r  (cost=0.43..2697.19 rows=49225 width=10) (actual time=0.008..4.962 rows=28168 loops=3)
+                          Buffers: shared hit=98735 read=36000
+                          ->  Parallel Seq Scan on bookings b  (cost=0.00..63621.65 rows=1249865 width=12) (actual time=0.008..45.720 rows=1000000 loops=3)
+                                Buffers: shared hit=15123 read=36000
+                          ->  Parallel Hash  (cost=2697.19..2697.19 rows=49225 width=10) (actual time=6.862..6.863 rows=28168 loops=3)
+                                Buckets: 131072  Batches: 1  Memory Usage: 5056kB
+                                Buffers: shared hit=83582
+                                ->  Parallel Index Scan using idx_reviews_created on reviews r  (cost=0.43..2697.19 rows=49225 width=10) (actual time=0.007..5.136 rows=28168 loops=3)
                                       Index Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
-                                      Buffers: shared hit=83583
+                                      Buffers: shared hit=83582
 Planning:
-  Buffers: shared hit=499
-Planning Time: 0.801 ms
-Execution Time: 114.564 ms
+  Buffers: shared hit=500
+Planning Time: 0.802 ms
+Execution Time: 131.507 ms
 === R15 run 3 ===
-Sort  (cost=80062.91..80072.98 rows=4028 width=44) (actual time=123.926..124.045 rows=1885 loops=1)
+Sort  (cost=80185.90..80195.73 rows=3933 width=44) (actual time=128.196..128.325 rows=1885 loops=1)
   Sort Key: (round(avg(r.rating_for_pro), 2))
   Sort Method: quicksort  Memory: 137kB
-  Buffers: shared hit=98706 read=35890
-  ->  Finalize HashAggregate  (cost=79177.27..79821.71 rows=4028 width=44) (actual time=119.485..123.768 rows=1885 loops=1)
+  Buffers: shared hit=98739 read=36000
+  ->  Finalize HashAggregate  (cost=79321.86..79951.07 rows=3933 width=44) (actual time=124.587..128.104 rows=1885 loops=1)
         Group Key: b.pro_id
         Filter: ((count(*) >= 5) AND (avg(r.rating_for_pro) < 4.0))
         Batches: 1  Memory Usage: 6673kB
         Rows Removed by Filter: 31541
-        Buffers: shared hit=98703 read=35890
-        ->  Gather  (cost=71331.97..78654.25 rows=69736 width=44) (actual time=108.433..111.559 rows=58262 loops=1)
+        Buffers: shared hit=98736 read=36000
+        ->  Gather  (cost=71476.56..78798.84 rows=69736 width=44) (actual time=114.084..116.932 rows=58189 loops=1)
               Workers Planned: 2
               Workers Launched: 2
-              Buffers: shared hit=98703 read=35890
-              ->  Partial HashAggregate  (cost=70331.97..70680.65 rows=34868 width=44) (actual time=106.685..108.152 rows=19421 loops=3)
+              Buffers: shared hit=98736 read=36000
+              ->  Partial HashAggregate  (cost=70476.56..70825.24 rows=34868 width=44) (actual time=112.488..113.768 rows=19396 loops=3)
                     Group Key: b.pro_id
                     Batches: 1  Memory Usage: 4625kB
-                    Buffers: shared hit=98703 read=35890
+                    Buffers: shared hit=98736 read=36000
                     Worker 0:  Batches: 1  Memory Usage: 4625kB
-                    Worker 1:  Batches: 1  Memory Usage: 4625kB
-                    ->  Parallel Hash Join  (cost=3312.50..70070.46 rows=34868 width=6) (actual time=16.384..102.522 rows=28168 loops=3)
+                    Worker 1:  Batches: 1  Memory Usage: 4369kB
+                    ->  Parallel Hash Join  (cost=3312.50..70215.05 rows=34868 width=6) (actual time=17.861..108.259 rows=28168 loops=3)
                           Hash Cond: (b.booking_id = r.booking_id)
-                          Buffers: shared hit=98703 read=35890
-                          ->  Parallel Seq Scan on bookings b  (cost=0.00..63477.39 rows=1249739 width=12) (actual time=0.005..42.690 rows=1000000 loops=3)
-                                Buffers: shared hit=15090 read=35890
-                          ->  Parallel Hash  (cost=2697.19..2697.19 rows=49225 width=10) (actual time=6.834..6.834 rows=28168 loops=3)
+                          Buffers: shared hit=98736 read=36000
+                          ->  Parallel Seq Scan on bookings b  (cost=0.00..63621.65 rows=1249865 width=12) (actual time=0.009..44.990 rows=1000000 loops=3)
+                                Buffers: shared hit=15123 read=36000
+                          ->  Parallel Hash  (cost=2697.19..2697.19 rows=49225 width=10) (actual time=6.813..6.813 rows=28168 loops=3)
                                 Buckets: 131072  Batches: 1  Memory Usage: 5056kB
                                 Buffers: shared hit=83583
-                                ->  Parallel Index Scan using idx_reviews_created on reviews r  (cost=0.43..2697.19 rows=49225 width=10) (actual time=0.014..5.120 rows=28168 loops=3)
+                                ->  Parallel Index Scan using idx_reviews_created on reviews r  (cost=0.43..2697.19 rows=49225 width=10) (actual time=0.007..5.101 rows=28168 loops=3)
                                       Index Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
                                       Buffers: shared hit=83583
 Planning:
-  Buffers: shared hit=499
-Planning Time: 0.820 ms
-Execution Time: 124.286 ms
+  Buffers: shared hit=500
+Planning Time: 0.795 ms
+Execution Time: 128.520 ms

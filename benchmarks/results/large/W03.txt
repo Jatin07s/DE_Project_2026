@@ -1,33 +1,33 @@
 === W03 run 1 ===
-Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.033..0.034 rows=0 loops=1)
-  Buffers: shared hit=7
-  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.032..0.033 rows=0 loops=1)
+Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.023..0.024 rows=0 loops=1)
+  Buffers: shared hit=5
+  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.023..0.023 rows=0 loops=1)
         Index Cond: ((pro_id = 425) AND ((status)::text = 'ASSIGNED'::text))
         Filter: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
-        Buffers: shared hit=7
+        Buffers: shared hit=5
 Planning:
   Buffers: shared hit=280
-Planning Time: 1.505 ms
-Execution Time: 0.120 ms
+Planning Time: 0.977 ms
+Execution Time: 0.097 ms
 === W03 run 2 ===
-Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.017..0.018 rows=0 loops=1)
+Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.032..0.032 rows=0 loops=1)
   Buffers: shared hit=3
-  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.017..0.017 rows=0 loops=1)
+  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.031..0.031 rows=0 loops=1)
         Index Cond: ((pro_id = 425) AND ((status)::text = 'ASSIGNED'::text))
         Filter: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
         Buffers: shared hit=3
 Planning:
   Buffers: shared hit=280
-Planning Time: 0.985 ms
-Execution Time: 0.111 ms
+Planning Time: 1.588 ms
+Execution Time: 0.181 ms
 === W03 run 3 ===
-Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.018..0.018 rows=0 loops=1)
+Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.029..0.030 rows=0 loops=1)
   Buffers: shared hit=3
-  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.017..0.017 rows=0 loops=1)
+  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.028..0.028 rows=0 loops=1)
         Index Cond: ((pro_id = 425) AND ((status)::text = 'ASSIGNED'::text))
         Filter: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
         Buffers: shared hit=3
 Planning:
   Buffers: shared hit=280
-Planning Time: 1.114 ms
-Execution Time: 0.113 ms
+Planning Time: 1.338 ms
+Execution Time: 0.153 ms

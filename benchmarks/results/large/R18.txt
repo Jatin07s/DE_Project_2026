@@ -1,33 +1,33 @@
 === R18 run 1 ===
-Limit  (cost=0.43..17.33 rows=50 width=44) (actual time=0.024..0.327 rows=50 loops=1)
+Limit  (cost=0.43..17.33 rows=50 width=44) (actual time=0.024..0.315 rows=50 loops=1)
   Buffers: shared hit=511 read=90
-  ->  Index Scan Backward using idx_reviews_created on reviews r  (cost=0.43..51774.98 rows=153164 width=44) (actual time=0.024..0.323 rows=50 loops=1)
+  ->  Index Scan Backward using idx_reviews_created on reviews r  (cost=0.43..51774.98 rows=153164 width=44) (actual time=0.023..0.312 rows=50 loops=1)
         Filter: (comment ~~* '%late%'::text)
         Rows Removed by Filter: 566
         Buffers: shared hit=511 read=90
 Planning:
   Buffers: shared hit=118 read=9
-Planning Time: 1.423 ms
-Execution Time: 0.339 ms
+Planning Time: 2.023 ms
+Execution Time: 0.329 ms
 === R18 run 2 ===
-Limit  (cost=0.43..17.33 rows=50 width=44) (actual time=0.015..0.285 rows=50 loops=1)
+Limit  (cost=0.43..17.33 rows=50 width=44) (actual time=0.012..0.236 rows=50 loops=1)
   Buffers: shared hit=601
-  ->  Index Scan Backward using idx_reviews_created on reviews r  (cost=0.43..51774.98 rows=153164 width=44) (actual time=0.014..0.282 rows=50 loops=1)
+  ->  Index Scan Backward using idx_reviews_created on reviews r  (cost=0.43..51774.98 rows=153164 width=44) (actual time=0.011..0.234 rows=50 loops=1)
         Filter: (comment ~~* '%late%'::text)
         Rows Removed by Filter: 566
         Buffers: shared hit=601
 Planning:
   Buffers: shared hit=127
-Planning Time: 1.028 ms
-Execution Time: 0.299 ms
+Planning Time: 0.769 ms
+Execution Time: 0.249 ms
 === R18 run 3 ===
-Limit  (cost=0.43..17.33 rows=50 width=44) (actual time=0.015..0.286 rows=50 loops=1)
+Limit  (cost=0.43..17.33 rows=50 width=44) (actual time=0.010..0.238 rows=50 loops=1)
   Buffers: shared hit=601
-  ->  Index Scan Backward using idx_reviews_created on reviews r  (cost=0.43..51774.98 rows=153164 width=44) (actual time=0.014..0.283 rows=50 loops=1)
+  ->  Index Scan Backward using idx_reviews_created on reviews r  (cost=0.43..51774.98 rows=153164 width=44) (actual time=0.009..0.235 rows=50 loops=1)
         Filter: (comment ~~* '%late%'::text)
         Rows Removed by Filter: 566
         Buffers: shared hit=601
 Planning:
   Buffers: shared hit=127
-Planning Time: 0.847 ms
-Execution Time: 0.300 ms
+Planning Time: 0.650 ms
+Execution Time: 0.249 ms

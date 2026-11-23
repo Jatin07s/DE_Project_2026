@@ -10,19 +10,41 @@ WHERE c.category_name = 'AC Repair' AND s.is_active
 ORDER BY s.base_price;
 
 -- @R02
--- Slot picker: Bengaluru salon professionals free on 3 July 2026 from 11:00 to 12:30
+-- CP4 scale optimization: indexed rating order with EXISTS.
 SELECT p.pro_id, p.full_name, p.rating
 FROM professionals p
-JOIN pro_skills ps       ON ps.pro_id = p.pro_id
-JOIN service_categories c ON c.category_id = ps.category_id AND c.category_name = 'Salon for Women'
-JOIN pro_availability a  ON a.pro_id = p.pro_id AND a.work_date = '2026-07-03'
-WHERE p.city_id = 1 AND p.status = 'ACTIVE'
-  AND a.start_time <= '11:00' AND a.end_time >= '12:30'
-  AND NOT EXISTS (SELECT 1 FROM bookings b
-                  WHERE b.pro_id = p.pro_id
-                    AND b.status IN ('ASSIGNED', 'IN_PROGRESS')
-                    AND b.scheduled_start < '2026-07-03 12:30:00+05:30'
-                    AND b.scheduled_end   > '2026-07-03 11:00:00+05:30')
+WHERE p.city_id = 1
+  AND p.status = 'ACTIVE'
+
+  AND EXISTS (
+    SELECT 1
+    FROM pro_skills ps
+    JOIN service_categories c
+      ON c.category_id = ps.category_id
+    WHERE ps.pro_id = p.pro_id
+      AND c.category_name = 'Salon for Women'
+  )
+
+  AND EXISTS (
+    SELECT 1
+    FROM pro_availability a
+    WHERE a.pro_id = p.pro_id
+      AND a.work_date = DATE '2026-07-03'
+      AND a.start_time <= TIME '11:00'
+      AND a.end_time >= TIME '12:30'
+  )
+
+  AND NOT EXISTS (
+    SELECT 1
+    FROM bookings b
+    WHERE b.pro_id = p.pro_id
+      AND b.status IN ('ASSIGNED', 'IN_PROGRESS')
+      AND b.scheduled_start <
+          TIMESTAMPTZ '2026-07-03 12:30:00+05:30'
+      AND b.scheduled_end >
+          TIMESTAMPTZ '2026-07-03 11:00:00+05:30'
+  )
+
 ORDER BY p.rating DESC NULLS LAST
 LIMIT 10;
 

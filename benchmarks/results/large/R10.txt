@@ -1,84 +1,84 @@
 === R10 run 1 ===
-Limit  (cost=67678.88..67678.93 rows=20 width=44) (actual time=197.344..197.384 rows=20 loops=1)
-  Buffers: shared hit=209677 read=1007 written=636
-  ->  Sort  (cost=67678.88..67709.09 rows=12083 width=44) (actual time=197.342..197.381 rows=20 loops=1)
+Limit  (cost=75230.40..75230.45 rows=20 width=44) (actual time=85.212..85.231 rows=20 loops=1)
+  Buffers: shared hit=321987 read=1011 dirtied=2047 written=298
+  ->  Sort  (cost=75230.40..75259.90 rows=11798 width=44) (actual time=85.211..85.229 rows=20 loops=1)
         Sort Key: (round(((100.0 * (count(*) FILTER (WHERE ((status)::text = 'NO_SHOW'::text)))::numeric) / (count(*))::numeric), 2)) DESC
         Sort Method: top-N heapsort  Memory: 27kB
-        Buffers: shared hit=209677 read=1007 written=636
-        ->  Finalize HashAggregate  (cost=66753.19..67357.35 rows=12083 width=44) (actual time=188.424..195.455 rows=36335 loops=1)
+        Buffers: shared hit=321987 read=1011 dirtied=2047 written=298
+        ->  Finalize HashAggregate  (cost=74326.57..74916.46 rows=11798 width=44) (actual time=76.543..83.331 rows=36335 loops=1)
               Group Key: pro_id
               Filter: (count(*) >= 20)
               Batches: 1  Memory Usage: 5137kB
               Rows Removed by Filter: 7729
-              Buffers: shared hit=209674 read=1007 written=636
-              ->  Gather  (cost=1000.43..66209.44 rows=72500 width=20) (actual time=1.296..181.072 rows=46483 loops=1)
+              Buffers: shared hit=321984 read=1011 dirtied=2047 written=298
+              ->  Gather  (cost=1000.43..73795.68 rows=70786 width=20) (actual time=0.544..71.399 rows=46490 loops=1)
                     Workers Planned: 2
                     Workers Launched: 2
-                    Buffers: shared hit=209674 read=1007 written=636
-                    ->  Partial GroupAggregate  (cost=0.43..57959.44 rows=36250 width=20) (actual time=0.680..182.807 rows=15494 loops=3)
+                    Buffers: shared hit=321984 read=1011 dirtied=2047 written=298
+                    ->  Partial GroupAggregate  (cost=0.43..65717.08 rows=35393 width=20) (actual time=0.231..72.460 rows=15497 loops=3)
                           Group Key: pro_id
-                          Buffers: shared hit=209674 read=1007 written=636
-                          ->  Parallel Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.43..45629.44 rows=1196750 width=15) (actual time=0.199..149.786 rows=959625 loops=3)
+                          Buffers: shared hit=321984 read=1011 dirtied=2047 written=298
+                          ->  Parallel Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.43..53356.11 rows=1200704 width=15) (actual time=0.032..44.431 rows=959625 loops=3)
                                 Index Cond: (pro_id IS NOT NULL)
-                                Heap Fetches: 225
-                                Buffers: shared hit=209674 read=1007 written=636
+                                Heap Fetches: 110706
+                                Buffers: shared hit=321984 read=1011 dirtied=2047 written=298
 Planning:
   Buffers: shared hit=300
-Planning Time: 0.735 ms
-Execution Time: 197.541 ms
+Planning Time: 0.456 ms
+Execution Time: 85.339 ms
 === R10 run 2 ===
-Limit  (cost=67678.88..67678.93 rows=20 width=44) (actual time=72.949..72.968 rows=20 loops=1)
-  Buffers: shared hit=210679
-  ->  Sort  (cost=67678.88..67709.09 rows=12083 width=44) (actual time=72.948..72.966 rows=20 loops=1)
+Limit  (cost=75230.40..75230.45 rows=20 width=44) (actual time=81.163..81.183 rows=20 loops=1)
+  Buffers: shared hit=303430
+  ->  Sort  (cost=75230.40..75259.90 rows=11798 width=44) (actual time=81.162..81.182 rows=20 loops=1)
         Sort Key: (round(((100.0 * (count(*) FILTER (WHERE ((status)::text = 'NO_SHOW'::text)))::numeric) / (count(*))::numeric), 2)) DESC
         Sort Method: top-N heapsort  Memory: 27kB
-        Buffers: shared hit=210679
-        ->  Finalize HashAggregate  (cost=66753.19..67357.35 rows=12083 width=44) (actual time=64.109..70.932 rows=36335 loops=1)
+        Buffers: shared hit=303430
+        ->  Finalize HashAggregate  (cost=74326.57..74916.46 rows=11798 width=44) (actual time=71.923..78.935 rows=36335 loops=1)
               Group Key: pro_id
               Filter: (count(*) >= 20)
               Batches: 1  Memory Usage: 5137kB
               Rows Removed by Filter: 7729
-              Buffers: shared hit=210676
-              ->  Gather  (cost=1000.43..66209.44 rows=72500 width=20) (actual time=0.332..59.607 rows=46486 loops=1)
+              Buffers: shared hit=303427
+              ->  Gather  (cost=1000.43..73795.68 rows=70786 width=20) (actual time=0.519..66.922 rows=46489 loops=1)
                     Workers Planned: 2
                     Workers Launched: 2
-                    Buffers: shared hit=210676
-                    ->  Partial GroupAggregate  (cost=0.43..57959.44 rows=36250 width=20) (actual time=0.105..60.454 rows=15495 loops=3)
+                    Buffers: shared hit=303427
+                    ->  Partial GroupAggregate  (cost=0.43..65717.08 rows=35393 width=20) (actual time=0.226..68.002 rows=15496 loops=3)
                           Group Key: pro_id
-                          Buffers: shared hit=210676
-                          ->  Parallel Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.43..45629.44 rows=1196750 width=15) (actual time=0.019..33.258 rows=959625 loops=3)
+                          Buffers: shared hit=303427
+                          ->  Parallel Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.43..53356.11 rows=1200704 width=15) (actual time=0.020..40.501 rows=959625 loops=3)
                                 Index Cond: (pro_id IS NOT NULL)
-                                Heap Fetches: 222
-                                Buffers: shared hit=210676
+                                Heap Fetches: 92833
+                                Buffers: shared hit=303427
 Planning:
   Buffers: shared hit=300
-Planning Time: 0.417 ms
-Execution Time: 73.071 ms
+Planning Time: 0.419 ms
+Execution Time: 81.308 ms
 === R10 run 3 ===
-Limit  (cost=67678.88..67678.93 rows=20 width=44) (actual time=79.192..79.231 rows=20 loops=1)
-  Buffers: shared hit=210693
-  ->  Sort  (cost=67678.88..67709.09 rows=12083 width=44) (actual time=79.191..79.230 rows=20 loops=1)
+Limit  (cost=75230.40..75230.45 rows=20 width=44) (actual time=81.282..81.302 rows=20 loops=1)
+  Buffers: shared hit=303434
+  ->  Sort  (cost=75230.40..75259.90 rows=11798 width=44) (actual time=81.281..81.300 rows=20 loops=1)
         Sort Key: (round(((100.0 * (count(*) FILTER (WHERE ((status)::text = 'NO_SHOW'::text)))::numeric) / (count(*))::numeric), 2)) DESC
         Sort Method: top-N heapsort  Memory: 27kB
-        Buffers: shared hit=210693
-        ->  Finalize HashAggregate  (cost=66753.19..67357.35 rows=12083 width=44) (actual time=69.251..76.982 rows=36335 loops=1)
+        Buffers: shared hit=303434
+        ->  Finalize HashAggregate  (cost=74326.57..74916.46 rows=11798 width=44) (actual time=72.402..79.303 rows=36335 loops=1)
               Group Key: pro_id
               Filter: (count(*) >= 20)
               Batches: 1  Memory Usage: 5137kB
               Rows Removed by Filter: 7729
-              Buffers: shared hit=210690
-              ->  Gather  (cost=1000.43..66209.44 rows=72500 width=20) (actual time=0.348..64.205 rows=46478 loops=1)
+              Buffers: shared hit=303431
+              ->  Gather  (cost=1000.43..73795.68 rows=70786 width=20) (actual time=0.534..67.481 rows=46487 loops=1)
                     Workers Planned: 2
                     Workers Launched: 2
-                    Buffers: shared hit=210690
-                    ->  Partial GroupAggregate  (cost=0.43..57959.44 rows=36250 width=20) (actual time=0.110..65.165 rows=15493 loops=3)
+                    Buffers: shared hit=303431
+                    ->  Partial GroupAggregate  (cost=0.43..65717.08 rows=35393 width=20) (actual time=0.244..68.498 rows=15496 loops=3)
                           Group Key: pro_id
-                          Buffers: shared hit=210690
-                          ->  Parallel Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.43..45629.44 rows=1196750 width=15) (actual time=0.020..35.457 rows=959625 loops=3)
+                          Buffers: shared hit=303431
+                          ->  Parallel Index Only Scan using idx_bookings_pro_status on bookings  (cost=0.43..53356.11 rows=1200704 width=15) (actual time=0.021..40.739 rows=959625 loops=3)
                                 Index Cond: (pro_id IS NOT NULL)
-                                Heap Fetches: 222
-                                Buffers: shared hit=210690
+                                Heap Fetches: 92833
+                                Buffers: shared hit=303431
 Planning:
   Buffers: shared hit=300
-Planning Time: 0.467 ms
-Execution Time: 79.386 ms
+Planning Time: 0.446 ms
+Execution Time: 81.422 ms

@@ -1,45 +1,57 @@
 === R13 run 1 ===
-Nested Loop Anti Join  (cost=0.43..25036.78 rows=12108 width=22) (actual time=0.064..50.650 rows=7189 loops=1)
-  Buffers: shared hit=136985 read=3577
-  ->  Seq Scan on professionals p  (cost=0.00..1161.00 rows=44030 width=22) (actual time=0.005..3.730 rows=44064 loops=1)
-        Filter: ((status)::text = 'ACTIVE'::text)
-        Rows Removed by Filter: 5936
-        Buffers: shared read=536
-  ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.43..0.86 rows=7 width=4) (actual time=0.001..0.001 rows=1 loops=44064)
-        Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
-        Heap Fetches: 1
-        Buffers: shared hit=136985 read=3041
+Gather  (cost=1000.85..15037.22 rows=12874 width=22) (actual time=0.136..23.538 rows=7189 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  Buffers: shared hit=137343 read=3868
+  ->  Nested Loop Anti Join  (cost=0.84..12749.82 rows=5364 width=22) (actual time=0.096..21.080 rows=2396 loops=3)
+        Buffers: shared hit=137343 read=3868
+        ->  Parallel Index Only Scan using idx_professionals_city_status_rating on professionals p  (cost=0.41..2038.89 rows=18362 width=22) (actual time=0.035..1.051 rows=14688 loops=3)
+              Index Cond: (status = 'ACTIVE'::text)
+              Heap Fetches: 0
+              Buffers: shared hit=3 read=361
+        ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.43..1.01 rows=6 width=4) (actual time=0.001..0.001 rows=1 loops=44064)
+              Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
+              Heap Fetches: 902
+              Buffers: shared hit=137340 read=3507
 Planning:
-  Buffers: shared hit=414 read=43
-Planning Time: 3.470 ms
-Execution Time: 50.796 ms
+  Buffers: shared hit=442 read=44
+Planning Time: 0.927 ms
+Execution Time: 23.683 ms
 === R13 run 2 ===
-Nested Loop Anti Join  (cost=0.43..25036.78 rows=12108 width=22) (actual time=0.042..35.726 rows=7189 loops=1)
-  Buffers: shared hit=140562
-  ->  Seq Scan on professionals p  (cost=0.00..1161.00 rows=44030 width=22) (actual time=0.002..2.791 rows=44064 loops=1)
-        Filter: ((status)::text = 'ACTIVE'::text)
-        Rows Removed by Filter: 5936
-        Buffers: shared hit=536
-  ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.43..0.86 rows=7 width=4) (actual time=0.001..0.001 rows=1 loops=44064)
-        Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
-        Heap Fetches: 1
-        Buffers: shared hit=140026
+Gather  (cost=1000.85..15037.22 rows=12874 width=22) (actual time=0.121..20.906 rows=7189 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  Buffers: shared hit=141213
+  ->  Nested Loop Anti Join  (cost=0.84..12749.82 rows=5364 width=22) (actual time=0.041..18.550 rows=2396 loops=3)
+        Buffers: shared hit=141213
+        ->  Parallel Index Only Scan using idx_professionals_city_status_rating on professionals p  (cost=0.41..2038.89 rows=18362 width=22) (actual time=0.016..0.826 rows=14688 loops=3)
+              Index Cond: (status = 'ACTIVE'::text)
+              Heap Fetches: 0
+              Buffers: shared hit=364
+        ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.43..1.01 rows=6 width=4) (actual time=0.001..0.001 rows=1 loops=44064)
+              Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
+              Heap Fetches: 902
+              Buffers: shared hit=140849
 Planning:
-  Buffers: shared hit=457
-Planning Time: 0.699 ms
-Execution Time: 35.858 ms
+  Buffers: shared hit=486
+Planning Time: 0.697 ms
+Execution Time: 21.047 ms
 === R13 run 3 ===
-Nested Loop Anti Join  (cost=0.43..25036.78 rows=12108 width=22) (actual time=0.039..35.749 rows=7189 loops=1)
-  Buffers: shared hit=140562
-  ->  Seq Scan on professionals p  (cost=0.00..1161.00 rows=44030 width=22) (actual time=0.002..2.830 rows=44064 loops=1)
-        Filter: ((status)::text = 'ACTIVE'::text)
-        Rows Removed by Filter: 5936
-        Buffers: shared hit=536
-  ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.43..0.86 rows=7 width=4) (actual time=0.001..0.001 rows=1 loops=44064)
-        Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
-        Heap Fetches: 1
-        Buffers: shared hit=140026
+Gather  (cost=1000.85..15037.22 rows=12874 width=22) (actual time=0.116..20.430 rows=7189 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  Buffers: shared hit=141214
+  ->  Nested Loop Anti Join  (cost=0.84..12749.82 rows=5364 width=22) (actual time=0.044..18.205 rows=2396 loops=3)
+        Buffers: shared hit=141214
+        ->  Parallel Index Only Scan using idx_professionals_city_status_rating on professionals p  (cost=0.41..2038.89 rows=18362 width=22) (actual time=0.015..0.829 rows=14688 loops=3)
+              Index Cond: (status = 'ACTIVE'::text)
+              Heap Fetches: 0
+              Buffers: shared hit=364
+        ->  Index Only Scan using idx_bookings_pro_status on bookings b  (cost=0.43..1.01 rows=6 width=4) (actual time=0.001..0.001 rows=1 loops=44064)
+              Index Cond: ((pro_id = p.pro_id) AND (status = 'CANCELLED_BY_CUSTOMER'::text))
+              Heap Fetches: 902
+              Buffers: shared hit=140850
 Planning:
-  Buffers: shared hit=457
-Planning Time: 0.629 ms
-Execution Time: 35.879 ms
+  Buffers: shared hit=486
+Planning Time: 0.681 ms
+Execution Time: 20.572 ms

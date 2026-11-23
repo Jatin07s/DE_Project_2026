@@ -1,27 +1,27 @@
 === R22 run 1 ===
-Limit  (cost=4304.19..4305.26 rows=25 width=35) (actual time=13.702..13.705 rows=25 loops=1)
-  Buffers: shared hit=1689 read=322
-  ->  Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..129086.24 rows=2999374 width=35) (actual time=0.006..11.686 rows=100025 loops=1)
-        Buffers: shared hit=1689 read=322
+Limit  (cost=4310.93..4312.01 rows=25 width=35) (actual time=16.517..16.520 rows=25 loops=1)
+  Buffers: shared hit=9449 read=644
+  ->  Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..129301.57 rows=2999676 width=35) (actual time=0.019..14.583 rows=100025 loops=1)
+        Buffers: shared hit=9449 read=644
 Planning:
   Buffers: shared hit=297
-Planning Time: 0.493 ms
-Execution Time: 13.717 ms
+Planning Time: 0.489 ms
+Execution Time: 16.532 ms
 === R22 run 2 ===
-Limit  (cost=4304.19..4305.26 rows=25 width=35) (actual time=11.656..11.659 rows=25 loops=1)
-  Buffers: shared hit=2011
-  ->  Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..129086.24 rows=2999374 width=35) (actual time=0.006..9.759 rows=100025 loops=1)
-        Buffers: shared hit=2011
+Limit  (cost=4310.93..4312.01 rows=25 width=35) (actual time=14.172..14.175 rows=25 loops=1)
+  Buffers: shared hit=10093
+  ->  Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..129301.57 rows=2999676 width=35) (actual time=0.011..12.366 rows=100025 loops=1)
+        Buffers: shared hit=10093
 Planning:
   Buffers: shared hit=297
-Planning Time: 0.484 ms
-Execution Time: 11.670 ms
+Planning Time: 0.428 ms
+Execution Time: 14.184 ms
 === R22 run 3 ===
-Limit  (cost=4304.19..4305.26 rows=25 width=35) (actual time=11.723..11.726 rows=25 loops=1)
-  Buffers: shared hit=2011
-  ->  Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..129086.24 rows=2999374 width=35) (actual time=0.006..9.897 rows=100025 loops=1)
-        Buffers: shared hit=2011
+Limit  (cost=4310.93..4312.01 rows=25 width=35) (actual time=13.401..13.404 rows=25 loops=1)
+  Buffers: shared hit=10093
+  ->  Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..129301.57 rows=2999676 width=35) (actual time=0.011..11.672 rows=100025 loops=1)
+        Buffers: shared hit=10093
 Planning:
   Buffers: shared hit=297
-Planning Time: 0.453 ms
-Execution Time: 11.737 ms
+Planning Time: 0.414 ms
+Execution Time: 13.413 ms

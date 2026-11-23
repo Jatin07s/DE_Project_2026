@@ -1,171 +1,162 @@
 === R25 run 1 ===
-Limit  (cost=206533.18..206533.26 rows=30 width=68) (actual time=87.337..87.343 rows=30 loops=1)
-  Buffers: shared hit=1372 read=9902, temp read=8 written=31
-  ->  Sort  (cost=206533.18..217770.06 rows=4494752 width=68) (actual time=87.336..87.341 rows=30 loops=1)
+Limit  (cost=196056.08..196056.15 rows=30 width=68) (actual time=75.197..75.200 rows=30 loops=1)
+  Buffers: shared hit=887 read=9909, temp read=8 written=31
+  ->  Sort  (cost=196056.08..206588.75 rows=4213070 width=68) (actual time=75.196..75.198 rows=30 loops=1)
         Sort Key: (COALESCE(bk.booked_min, '0'::numeric)) DESC
         Sort Method: top-N heapsort  Memory: 26kB
-        Buffers: shared hit=1372 read=9902, temp read=8 written=31
-        ->  Hash Left Join  (cost=72508.55..73783.14 rows=4494752 width=68) (actual time=79.775..86.893 rows=7073 loops=1)
+        Buffers: shared hit=887 read=9909, temp read=8 written=31
+        ->  Hash Left Join  (cost=70338.97..71625.36 rows=4213070 width=68) (actual time=67.927..74.746 rows=7073 loops=1)
               Hash Cond: (pa.pro_id = bk.pro_id)
-              Buffers: shared hit=1369 read=9902, temp read=8 written=31
-              ->  GroupAggregate  (cost=23405.70..24567.08 rows=42232 width=36) (actual time=64.199..70.364 rows=7073 loops=1)
+              Buffers: shared hit=884 read=9909, temp read=8 written=31
+              ->  GroupAggregate  (cost=23111.00..24283.14 rows=42623 width=36) (actual time=51.219..57.379 rows=7073 loops=1)
                     Group Key: pa.pro_id
-                    Buffers: shared hit=542 read=9627
-                    ->  Sort  (cost=23405.70..23511.28 rows=42232 width=20) (actual time=64.180..64.976 rows=42438 loops=1)
+                    Buffers: shared hit=57 read=9634
+                    ->  Sort  (cost=23111.00..23217.56 rows=42623 width=20) (actual time=51.206..51.946 rows=42438 loops=1)
                           Sort Key: pa.pro_id
                           Sort Method: quicksort  Memory: 3355kB
-                          Buffers: shared hit=542 read=9627
-                          ->  Hash Join  (cost=6504.13..20161.01 rows=42232 width=20) (actual time=13.528..62.517 rows=42438 loops=1)
+                          Buffers: shared hit=57 read=9634
+                          ->  Hash Join  (cost=6176.56..19833.43 rows=42623 width=20) (actual time=11.389..49.501 rows=42438 loops=1)
                                 Hash Cond: (pa.pro_id = pr.pro_id)
-                                Buffers: shared hit=539 read=9627
-                                ->  Bitmap Heap Scan on pro_availability pa  (cost=5677.22..18632.13 rows=267394 width=20) (actual time=12.254..51.397 rows=264384 loops=1)
+                                Buffers: shared hit=54 read=9634
+                                ->  Bitmap Heap Scan on pro_availability pa  (cost=5677.22..18632.13 rows=267394 width=20) (actual time=10.653..38.335 rows=264384 loops=1)
                                       Recheck Cond: ((work_date >= '2026-06-22'::date) AND (work_date <= '2026-06-28'::date))
                                       Heap Blocks: exact=8902
                                       Buffers: shared read=9627
-                                      ->  Bitmap Index Scan on idx_pro_availability_date_pro  (cost=0.00..5610.37 rows=267394 width=0) (actual time=11.407..11.409 rows=264384 loops=1)
+                                      ->  Bitmap Index Scan on idx_pro_availability_date_pro  (cost=0.00..5610.37 rows=267394 width=0) (actual time=9.791..9.791 rows=264384 loops=1)
                                             Index Cond: ((work_date >= '2026-06-22'::date) AND (work_date <= '2026-06-28'::date))
                                             Buffers: shared read=725
-                                ->  Hash  (cost=728.20..728.20 rows=7897 width=4) (actual time=1.250..1.252 rows=8000 loops=1)
+                                ->  Hash  (cost=399.72..399.72 rows=7970 width=4) (actual time=0.727..0.727 rows=8000 loops=1)
                                       Buckets: 8192  Batches: 1  Memory Usage: 346kB
-                                      Buffers: shared hit=539
-                                      ->  Bitmap Heap Scan on professionals pr  (cost=93.49..728.20 rows=7897 width=4) (actual time=0.131..0.950 rows=8000 loops=1)
-                                            Recheck Cond: (city_id = 1)
-                                            Heap Blocks: exact=531
-                                            Buffers: shared hit=539
-                                            ->  Bitmap Index Scan on idx_professionals_city_status  (cost=0.00..91.52 rows=7897 width=0) (actual time=0.100..0.100 rows=8000 loops=1)
-                                                  Index Cond: (city_id = 1)
-                                                  Buffers: shared hit=8
-              ->  Hash  (cost=48836.78..48836.78 rows=21286 width=36) (actual time=15.549..15.549 rows=21471 loops=1)
+                                      Buffers: shared hit=54 read=7
+                                      ->  Index Only Scan using idx_professionals_city_status_rating on professionals pr  (cost=0.41..399.72 rows=7970 width=4) (actual time=0.006..0.431 rows=8000 loops=1)
+                                            Index Cond: (city_id = 1)
+                                            Heap Fetches: 0
+                                            Buffers: shared hit=54 read=7
+              ->  Hash  (cost=46980.85..46980.85 rows=19769 width=36) (actual time=16.699..16.700 rows=21471 loops=1)
                     Buckets: 32768  Batches: 1  Memory Usage: 1179kB
                     Buffers: shared hit=827 read=275, temp read=8 written=31
-                    ->  Subquery Scan on bk  (cost=48357.84..48836.78 rows=21286 width=36) (actual time=10.911..14.662 rows=21471 loops=1)
+                    ->  Subquery Scan on bk  (cost=46536.05..46980.85 rows=19769 width=36) (actual time=12.127..15.843 rows=21471 loops=1)
                           Buffers: shared hit=827 read=275, temp read=8 written=31
-                          ->  HashAggregate  (cost=48357.84..48623.92 rows=21286 width=36) (actual time=10.909..13.957 rows=21471 loops=1)
+                          ->  HashAggregate  (cost=46536.05..46783.16 rows=19769 width=36) (actual time=12.126..15.153 rows=21471 loops=1)
                                 Group Key: b.pro_id
                                 Batches: 5  Memory Usage: 8241kB  Disk Usage: 208kB
                                 Buffers: shared hit=827 read=275, temp read=8 written=31
-                                ->  Bitmap Heap Scan on bookings b  (cost=531.19..47959.05 rows=31903 width=20) (actual time=0.955..3.537 rows=32846 loops=1)
+                                ->  Bitmap Heap Scan on bookings b  (cost=479.67..46176.01 rows=28803 width=20) (actual time=0.572..3.711 rows=32846 loops=1)
                                       Recheck Cond: (((status)::text = 'COMPLETED'::text) AND (scheduled_start >= '2026-06-22 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-06-29 00:00:00+05:30'::timestamp with time zone))
                                       Heap Blocks: exact=1070
                                       Buffers: shared hit=827 read=275
-                                      ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..523.22 rows=31903 width=0) (actual time=0.893..0.893 rows=32846 loops=1)
+                                      ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..472.47 rows=28803 width=0) (actual time=0.518..0.518 rows=32846 loops=1)
                                             Index Cond: (((status)::text = 'COMPLETED'::text) AND (scheduled_start >= '2026-06-22 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-06-29 00:00:00+05:30'::timestamp with time zone))
                                             Buffers: shared read=32
 Planning:
-  Buffers: shared hit=467 read=11
-Planning Time: 1.135 ms
-Execution Time: 87.633 ms
+  Buffers: shared hit=497 read=10
+Planning Time: 1.086 ms
+Execution Time: 75.424 ms
 === R25 run 2 ===
-Limit  (cost=206533.18..206533.26 rows=30 width=68) (actual time=71.514..71.519 rows=30 loops=1)
-  Buffers: shared hit=2251 read=9023 written=1, temp read=8 written=31
-  ->  Sort  (cost=206533.18..217770.06 rows=4494752 width=68) (actual time=71.513..71.517 rows=30 loops=1)
+Limit  (cost=196056.08..196056.15 rows=30 width=68) (actual time=60.594..60.597 rows=30 loops=1)
+  Buffers: shared hit=2857 read=7939 written=56, temp read=8 written=31
+  ->  Sort  (cost=196056.08..206588.75 rows=4213070 width=68) (actual time=60.593..60.595 rows=30 loops=1)
         Sort Key: (COALESCE(bk.booked_min, '0'::numeric)) DESC
         Sort Method: top-N heapsort  Memory: 26kB
-        Buffers: shared hit=2251 read=9023 written=1, temp read=8 written=31
-        ->  Hash Left Join  (cost=72508.55..73783.14 rows=4494752 width=68) (actual time=64.126..71.055 rows=7073 loops=1)
+        Buffers: shared hit=2857 read=7939 written=56, temp read=8 written=31
+        ->  Hash Left Join  (cost=70338.97..71625.36 rows=4213070 width=68) (actual time=53.071..60.141 rows=7073 loops=1)
               Hash Cond: (pa.pro_id = bk.pro_id)
-              Buffers: shared hit=2248 read=9023 written=1, temp read=8 written=31
-              ->  GroupAggregate  (cost=23405.70..24567.08 rows=42232 width=36) (actual time=47.691..53.814 rows=7073 loops=1)
+              Buffers: shared hit=2854 read=7939 written=56, temp read=8 written=31
+              ->  GroupAggregate  (cost=23111.00..24283.14 rows=42623 width=36) (actual time=39.160..45.560 rows=7073 loops=1)
                     Group Key: pa.pro_id
-                    Buffers: shared hit=1146 read=9023 written=1
-                    ->  Sort  (cost=23405.70..23511.28 rows=42232 width=20) (actual time=47.672..48.451 rows=42438 loops=1)
+                    Buffers: shared hit=1752 read=7939 written=56
+                    ->  Sort  (cost=23111.00..23217.56 rows=42623 width=20) (actual time=39.147..39.910 rows=42438 loops=1)
                           Sort Key: pa.pro_id
                           Sort Method: quicksort  Memory: 3355kB
-                          Buffers: shared hit=1146 read=9023 written=1
-                          ->  Hash Join  (cost=6504.13..20161.01 rows=42232 width=20) (actual time=10.655..46.049 rows=42438 loops=1)
+                          Buffers: shared hit=1752 read=7939 written=56
+                          ->  Hash Join  (cost=6176.56..19833.43 rows=42623 width=20) (actual time=7.677..37.636 rows=42438 loops=1)
                                 Hash Cond: (pa.pro_id = pr.pro_id)
-                                Buffers: shared hit=1143 read=9023 written=1
-                                ->  Bitmap Heap Scan on pro_availability pa  (cost=5677.22..18632.13 rows=267394 width=20) (actual time=8.889..34.842 rows=264384 loops=1)
+                                Buffers: shared hit=1749 read=7939 written=56
+                                ->  Bitmap Heap Scan on pro_availability pa  (cost=5677.22..18632.13 rows=267394 width=20) (actual time=6.937..27.731 rows=264384 loops=1)
                                       Recheck Cond: ((work_date >= '2026-06-22'::date) AND (work_date <= '2026-06-28'::date))
                                       Heap Blocks: exact=8902
-                                      Buffers: shared hit=1142 read=8485
-                                      ->  Bitmap Index Scan on idx_pro_availability_date_pro  (cost=0.00..5610.37 rows=267394 width=0) (actual time=8.341..8.343 rows=264384 loops=1)
+                                      Buffers: shared hit=1748 read=7879 written=56
+                                      ->  Bitmap Index Scan on idx_pro_availability_date_pro  (cost=0.00..5610.37 rows=267394 width=0) (actual time=6.327..6.327 rows=264384 loops=1)
                                             Index Cond: ((work_date >= '2026-06-22'::date) AND (work_date <= '2026-06-28'::date))
                                             Buffers: shared read=725
-                                ->  Hash  (cost=728.20..728.20 rows=7897 width=4) (actual time=1.757..1.758 rows=8000 loops=1)
+                                ->  Hash  (cost=399.72..399.72 rows=7970 width=4) (actual time=0.730..0.730 rows=8000 loops=1)
                                       Buckets: 8192  Batches: 1  Memory Usage: 346kB
-                                      Buffers: shared hit=1 read=538 written=1
-                                      ->  Bitmap Heap Scan on professionals pr  (cost=93.49..728.20 rows=7897 width=4) (actual time=0.137..1.484 rows=8000 loops=1)
-                                            Recheck Cond: (city_id = 1)
-                                            Heap Blocks: exact=531
-                                            Buffers: shared hit=1 read=538 written=1
-                                            ->  Bitmap Index Scan on idx_professionals_city_status  (cost=0.00..91.52 rows=7897 width=0) (actual time=0.107..0.108 rows=8000 loops=1)
-                                                  Index Cond: (city_id = 1)
-                                                  Buffers: shared read=8
-              ->  Hash  (cost=48836.78..48836.78 rows=21286 width=36) (actual time=16.390..16.390 rows=21471 loops=1)
+                                      Buffers: shared hit=1 read=60
+                                      ->  Index Only Scan using idx_professionals_city_status_rating on professionals pr  (cost=0.41..399.72 rows=7970 width=4) (actual time=0.009..0.451 rows=8000 loops=1)
+                                            Index Cond: (city_id = 1)
+                                            Heap Fetches: 0
+                                            Buffers: shared hit=1 read=60
+              ->  Hash  (cost=46980.85..46980.85 rows=19769 width=36) (actual time=13.903..13.903 rows=21471 loops=1)
                     Buckets: 32768  Batches: 1  Memory Usage: 1179kB
                     Buffers: shared hit=1102, temp read=8 written=31
-                    ->  Subquery Scan on bk  (cost=48357.84..48836.78 rows=21286 width=36) (actual time=10.844..15.441 rows=21471 loops=1)
+                    ->  Subquery Scan on bk  (cost=46536.05..46980.85 rows=19769 width=36) (actual time=9.453..13.021 rows=21471 loops=1)
                           Buffers: shared hit=1102, temp read=8 written=31
-                          ->  HashAggregate  (cost=48357.84..48623.92 rows=21286 width=36) (actual time=10.842..14.707 rows=21471 loops=1)
+                          ->  HashAggregate  (cost=46536.05..46783.16 rows=19769 width=36) (actual time=9.452..12.275 rows=21471 loops=1)
                                 Group Key: b.pro_id
                                 Batches: 5  Memory Usage: 8241kB  Disk Usage: 208kB
                                 Buffers: shared hit=1102, temp read=8 written=31
-                                ->  Bitmap Heap Scan on bookings b  (cost=531.19..47959.05 rows=31903 width=20) (actual time=0.596..2.746 rows=32846 loops=1)
+                                ->  Bitmap Heap Scan on bookings b  (cost=479.67..46176.01 rows=28803 width=20) (actual time=0.588..2.440 rows=32846 loops=1)
                                       Recheck Cond: (((status)::text = 'COMPLETED'::text) AND (scheduled_start >= '2026-06-22 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-06-29 00:00:00+05:30'::timestamp with time zone))
                                       Heap Blocks: exact=1070
                                       Buffers: shared hit=1102
-                                      ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..523.22 rows=31903 width=0) (actual time=0.534..0.534 rows=32846 loops=1)
+                                      ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..472.47 rows=28803 width=0) (actual time=0.527..0.527 rows=32846 loops=1)
                                             Index Cond: (((status)::text = 'COMPLETED'::text) AND (scheduled_start >= '2026-06-22 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-06-29 00:00:00+05:30'::timestamp with time zone))
                                             Buffers: shared hit=32
 Planning:
-  Buffers: shared hit=463 read=15
-Planning Time: 0.885 ms
-Execution Time: 71.989 ms
+  Buffers: shared hit=490 read=17
+Planning Time: 0.799 ms
+Execution Time: 60.826 ms
 === R25 run 3 ===
-Limit  (cost=206533.18..206533.26 rows=30 width=68) (actual time=57.641..57.644 rows=30 loops=1)
-  Buffers: shared hit=11274, temp read=8 written=31
-  ->  Sort  (cost=206533.18..217770.06 rows=4494752 width=68) (actual time=57.640..57.642 rows=30 loops=1)
+Limit  (cost=196056.08..196056.15 rows=30 width=68) (actual time=56.131..56.134 rows=30 loops=1)
+  Buffers: shared hit=10796, temp read=8 written=31
+  ->  Sort  (cost=196056.08..206588.75 rows=4213070 width=68) (actual time=56.130..56.132 rows=30 loops=1)
         Sort Key: (COALESCE(bk.booked_min, '0'::numeric)) DESC
         Sort Method: top-N heapsort  Memory: 26kB
-        Buffers: shared hit=11274, temp read=8 written=31
-        ->  Hash Left Join  (cost=72508.55..73783.14 rows=4494752 width=68) (actual time=50.315..57.164 rows=7073 loops=1)
+        Buffers: shared hit=10796, temp read=8 written=31
+        ->  Hash Left Join  (cost=70338.97..71625.36 rows=4213070 width=68) (actual time=48.514..55.613 rows=7073 loops=1)
               Hash Cond: (pa.pro_id = bk.pro_id)
-              Buffers: shared hit=11271, temp read=8 written=31
-              ->  GroupAggregate  (cost=23405.70..24567.08 rows=42232 width=36) (actual time=35.738..41.828 rows=7073 loops=1)
+              Buffers: shared hit=10793, temp read=8 written=31
+              ->  GroupAggregate  (cost=23111.00..24283.14 rows=42623 width=36) (actual time=34.184..40.626 rows=7073 loops=1)
                     Group Key: pa.pro_id
-                    Buffers: shared hit=10169
-                    ->  Sort  (cost=23405.70..23511.28 rows=42232 width=20) (actual time=35.723..36.476 rows=42438 loops=1)
+                    Buffers: shared hit=9691
+                    ->  Sort  (cost=23111.00..23217.56 rows=42623 width=20) (actual time=34.172..34.926 rows=42438 loops=1)
                           Sort Key: pa.pro_id
                           Sort Method: quicksort  Memory: 3355kB
-                          Buffers: shared hit=10169
-                          ->  Hash Join  (cost=6504.13..20161.01 rows=42232 width=20) (actual time=7.161..34.215 rows=42438 loops=1)
+                          Buffers: shared hit=9691
+                          ->  Hash Join  (cost=6176.56..19833.43 rows=42623 width=20) (actual time=6.836..32.321 rows=42438 loops=1)
                                 Hash Cond: (pa.pro_id = pr.pro_id)
-                                Buffers: shared hit=10166
-                                ->  Bitmap Heap Scan on pro_availability pa  (cost=5677.22..18632.13 rows=267394 width=20) (actual time=5.785..23.798 rows=264384 loops=1)
+                                Buffers: shared hit=9688
+                                ->  Bitmap Heap Scan on pro_availability pa  (cost=5677.22..18632.13 rows=267394 width=20) (actual time=6.152..22.875 rows=264384 loops=1)
                                       Recheck Cond: ((work_date >= '2026-06-22'::date) AND (work_date <= '2026-06-28'::date))
                                       Heap Blocks: exact=8902
                                       Buffers: shared hit=9627
-                                      ->  Bitmap Index Scan on idx_pro_availability_date_pro  (cost=0.00..5610.37 rows=267394 width=0) (actual time=5.200..5.201 rows=264384 loops=1)
+                                      ->  Bitmap Index Scan on idx_pro_availability_date_pro  (cost=0.00..5610.37 rows=267394 width=0) (actual time=5.548..5.548 rows=264384 loops=1)
                                             Index Cond: ((work_date >= '2026-06-22'::date) AND (work_date <= '2026-06-28'::date))
                                             Buffers: shared hit=725
-                                ->  Hash  (cost=728.20..728.20 rows=7897 width=4) (actual time=1.368..1.369 rows=8000 loops=1)
+                                ->  Hash  (cost=399.72..399.72 rows=7970 width=4) (actual time=0.676..0.676 rows=8000 loops=1)
                                       Buckets: 8192  Batches: 1  Memory Usage: 346kB
-                                      Buffers: shared hit=539
-                                      ->  Bitmap Heap Scan on professionals pr  (cost=93.49..728.20 rows=7897 width=4) (actual time=0.124..1.091 rows=8000 loops=1)
-                                            Recheck Cond: (city_id = 1)
-                                            Heap Blocks: exact=531
-                                            Buffers: shared hit=539
-                                            ->  Bitmap Index Scan on idx_professionals_city_status  (cost=0.00..91.52 rows=7897 width=0) (actual time=0.097..0.097 rows=8000 loops=1)
-                                                  Index Cond: (city_id = 1)
-                                                  Buffers: shared hit=8
-              ->  Hash  (cost=48836.78..48836.78 rows=21286 width=36) (actual time=14.557..14.557 rows=21471 loops=1)
+                                      Buffers: shared hit=61
+                                      ->  Index Only Scan using idx_professionals_city_status_rating on professionals pr  (cost=0.41..399.72 rows=7970 width=4) (actual time=0.007..0.407 rows=8000 loops=1)
+                                            Index Cond: (city_id = 1)
+                                            Heap Fetches: 0
+                                            Buffers: shared hit=61
+              ->  Hash  (cost=46980.85..46980.85 rows=19769 width=36) (actual time=14.322..14.323 rows=21471 loops=1)
                     Buckets: 32768  Batches: 1  Memory Usage: 1179kB
                     Buffers: shared hit=1102, temp read=8 written=31
-                    ->  Subquery Scan on bk  (cost=48357.84..48836.78 rows=21286 width=36) (actual time=9.995..13.688 rows=21471 loops=1)
+                    ->  Subquery Scan on bk  (cost=46536.05..46980.85 rows=19769 width=36) (actual time=9.791..13.299 rows=21471 loops=1)
                           Buffers: shared hit=1102, temp read=8 written=31
-                          ->  HashAggregate  (cost=48357.84..48623.92 rows=21286 width=36) (actual time=9.995..12.946 rows=21471 loops=1)
+                          ->  HashAggregate  (cost=46536.05..46783.16 rows=19769 width=36) (actual time=9.791..12.590 rows=21471 loops=1)
                                 Group Key: b.pro_id
                                 Batches: 5  Memory Usage: 8241kB  Disk Usage: 208kB
                                 Buffers: shared hit=1102, temp read=8 written=31
-                                ->  Bitmap Heap Scan on bookings b  (cost=531.19..47959.05 rows=31903 width=20) (actual time=0.562..2.553 rows=32846 loops=1)
+                                ->  Bitmap Heap Scan on bookings b  (cost=479.67..46176.01 rows=28803 width=20) (actual time=0.575..2.361 rows=32846 loops=1)
                                       Recheck Cond: (((status)::text = 'COMPLETED'::text) AND (scheduled_start >= '2026-06-22 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-06-29 00:00:00+05:30'::timestamp with time zone))
                                       Heap Blocks: exact=1070
                                       Buffers: shared hit=1102
-                                      ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..523.22 rows=31903 width=0) (actual time=0.502..0.502 rows=32846 loops=1)
+                                      ->  Bitmap Index Scan on idx_bookings_status_schedstart  (cost=0.00..472.47 rows=28803 width=0) (actual time=0.520..0.520 rows=32846 loops=1)
                                             Index Cond: (((status)::text = 'COMPLETED'::text) AND (scheduled_start >= '2026-06-22 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-06-29 00:00:00+05:30'::timestamp with time zone))
                                             Buffers: shared hit=32
 Planning:
-  Buffers: shared hit=478
-Planning Time: 0.752 ms
-Execution Time: 58.108 ms
+  Buffers: shared hit=507
+Planning Time: 0.898 ms
+Execution Time: 56.372 ms

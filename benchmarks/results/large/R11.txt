@@ -1,127 +1,127 @@
 === R11 run 1 ===
-Limit  (cost=26974.56..26974.58 rows=10 width=32) (actual time=13.105..13.748 rows=10 loops=1)
-  Buffers: shared hit=23104 read=490
-  ->  Sort  (cost=26974.56..26974.71 rows=60 width=32) (actual time=13.104..13.746 rows=10 loops=1)
+Limit  (cost=26976.91..26976.94 rows=10 width=32) (actual time=8.092..8.466 rows=10 loops=1)
+  Buffers: shared hit=23104 read=490 written=39
+  ->  Sort  (cost=26976.91..26977.06 rows=60 width=32) (actual time=8.091..8.465 rows=10 loops=1)
         Sort Key: (count(*)) DESC
         Sort Method: top-N heapsort  Memory: 26kB
-        Buffers: shared hit=23104 read=490
-        ->  Finalize GroupAggregate  (cost=26922.75..26973.26 rows=60 width=32) (actual time=12.859..13.734 rows=60 loops=1)
+        Buffers: shared hit=23104 read=490 written=39
+        ->  Finalize GroupAggregate  (cost=26925.10..26975.61 rows=60 width=32) (actual time=7.845..8.453 rows=60 loops=1)
               Group Key: s.service_name
-              Buffers: shared hit=23101 read=490
-              ->  Gather Merge  (cost=26922.75..26972.21 rows=60 width=32) (actual time=12.853..13.720 rows=120 loops=1)
+              Buffers: shared hit=23101 read=490 written=39
+              ->  Gather Merge  (cost=26925.10..26974.56 rows=60 width=32) (actual time=7.839..8.438 rows=120 loops=1)
                     Workers Planned: 1
                     Workers Launched: 1
-                    Buffers: shared hit=23101 read=490
-                    ->  Partial GroupAggregate  (cost=25922.74..25965.45 rows=60 width=32) (actual time=11.748..11.935 rows=60 loops=2)
+                    Buffers: shared hit=23101 read=490 written=39
+                    ->  Partial GroupAggregate  (cost=25925.09..25967.80 rows=60 width=32) (actual time=6.688..6.882 rows=60 loops=2)
                           Group Key: s.service_name
-                          Buffers: shared hit=23101 read=490
-                          ->  Sort  (cost=25922.74..25931.16 rows=3369 width=23) (actual time=11.739..11.795 rows=2934 loops=2)
+                          Buffers: shared hit=23101 read=490 written=39
+                          ->  Sort  (cost=25925.09..25933.51 rows=3369 width=23) (actual time=6.682..6.739 rows=2934 loops=2)
                                 Sort Key: s.service_name
-                                Sort Method: quicksort  Memory: 254kB
-                                Buffers: shared hit=23101 read=490
-                                Worker 0:  Sort Method: quicksort  Memory: 238kB
-                                ->  Hash Join  (cost=125.90..25725.35 rows=3369 width=23) (actual time=0.487..9.954 rows=2934 loops=2)
+                                Sort Method: quicksort  Memory: 259kB
+                                Buffers: shared hit=23101 read=490 written=39
+                                Worker 0:  Sort Method: quicksort  Memory: 233kB
+                                ->  Hash Join  (cost=125.90..25727.70 rows=3369 width=23) (actual time=0.560..4.858 rows=2934 loops=2)
                                       Hash Cond: (b.service_id = s.service_id)
-                                      Buffers: shared hit=23093 read=490
-                                      ->  Nested Loop  (cost=123.55..25713.53 rows=3369 width=11) (actual time=0.452..9.668 rows=2934 loops=2)
-                                            Buffers: shared hit=23077 read=490
-                                            ->  Parallel Bitmap Heap Scan on reschedules r  (cost=123.12..1437.65 rows=3369 width=15) (actual time=0.306..0.603 rows=2934 loops=2)
+                                      Buffers: shared hit=23093 read=490 written=39
+                                      ->  Nested Loop  (cost=123.55..25715.88 rows=3369 width=11) (actual time=0.533..4.607 rows=2934 loops=2)
+                                            Buffers: shared hit=23077 read=490 written=39
+                                            ->  Parallel Bitmap Heap Scan on reschedules r  (cost=123.12..1437.65 rows=3369 width=15) (actual time=0.521..0.810 rows=2934 loops=2)
                                                   Recheck Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
-                                                  Heap Blocks: exact=38
-                                                  Buffers: shared hit=1 read=89
-                                                  ->  Bitmap Index Scan on idx_reschedules_created  (cost=0.00..121.69 rows=5727 width=0) (actual time=0.474..0.474 rows=5869 loops=1)
+                                                  Heap Blocks: exact=39
+                                                  Buffers: shared hit=1 read=89 written=12
+                                                  ->  Bitmap Index Scan on idx_reschedules_created  (cost=0.00..121.69 rows=5727 width=0) (actual time=0.905..0.906 rows=5869 loops=1)
                                                         Index Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
                                                         Buffers: shared hit=1 read=18
-                                            ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..7.21 rows=1 width=12) (actual time=0.003..0.003 rows=1 loops=5869)
+                                            ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..7.21 rows=1 width=12) (actual time=0.001..0.001 rows=1 loops=5869)
                                                   Index Cond: (booking_id = r.booking_id)
-                                                  Buffers: shared hit=23076 read=401
+                                                  Buffers: shared hit=23076 read=401 written=27
                                       ->  Hash  (cost=1.60..1.60 rows=60 width=20) (actual time=0.020..0.020 rows=60 loops=2)
                                             Buckets: 1024  Batches: 1  Memory Usage: 12kB
                                             Buffers: shared hit=2
                                             ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.011..0.014 rows=60 loops=2)
                                                   Buffers: shared hit=2
 Planning:
-  Buffers: shared hit=512 read=5
-Planning Time: 1.596 ms
-Execution Time: 13.789 ms
+  Buffers: shared hit=512 read=8 dirtied=1
+Planning Time: 2.080 ms
+Execution Time: 8.518 ms
 === R11 run 2 ===
-Limit  (cost=26974.56..26974.58 rows=10 width=32) (actual time=8.160..8.176 rows=10 loops=1)
+Limit  (cost=26976.91..26976.94 rows=10 width=32) (actual time=8.049..8.062 rows=10 loops=1)
   Buffers: shared hit=23594
-  ->  Sort  (cost=26974.56..26974.71 rows=60 width=32) (actual time=8.159..8.175 rows=10 loops=1)
+  ->  Sort  (cost=26976.91..26977.06 rows=60 width=32) (actual time=8.048..8.061 rows=10 loops=1)
         Sort Key: (count(*)) DESC
         Sort Method: top-N heapsort  Memory: 26kB
         Buffers: shared hit=23594
-        ->  Finalize GroupAggregate  (cost=26922.75..26973.26 rows=60 width=32) (actual time=7.896..8.162 rows=60 loops=1)
+        ->  Finalize GroupAggregate  (cost=26925.10..26975.61 rows=60 width=32) (actual time=7.748..8.049 rows=60 loops=1)
               Group Key: s.service_name
               Buffers: shared hit=23591
-              ->  Gather Merge  (cost=26922.75..26972.21 rows=60 width=32) (actual time=7.889..8.148 rows=120 loops=1)
+              ->  Gather Merge  (cost=26925.10..26974.56 rows=60 width=32) (actual time=7.741..8.031 rows=120 loops=1)
                     Workers Planned: 1
                     Workers Launched: 1
                     Buffers: shared hit=23591
-                    ->  Partial GroupAggregate  (cost=25922.74..25965.45 rows=60 width=32) (actual time=6.298..6.487 rows=60 loops=2)
+                    ->  Partial GroupAggregate  (cost=25925.09..25967.80 rows=60 width=32) (actual time=6.210..6.425 rows=60 loops=2)
                           Group Key: s.service_name
                           Buffers: shared hit=23591
-                          ->  Sort  (cost=25922.74..25931.16 rows=3369 width=23) (actual time=6.286..6.341 rows=2934 loops=2)
+                          ->  Sort  (cost=25925.09..25933.51 rows=3369 width=23) (actual time=6.202..6.264 rows=2934 loops=2)
                                 Sort Key: s.service_name
-                                Sort Method: quicksort  Memory: 280kB
+                                Sort Method: quicksort  Memory: 277kB
                                 Buffers: shared hit=23591
-                                Worker 0:  Sort Method: quicksort  Memory: 212kB
-                                ->  Hash Join  (cost=125.90..25725.35 rows=3369 width=23) (actual time=0.101..3.912 rows=2934 loops=2)
+                                Worker 0:  Sort Method: quicksort  Memory: 216kB
+                                ->  Hash Join  (cost=125.90..25727.70 rows=3369 width=23) (actual time=0.120..4.155 rows=2934 loops=2)
                                       Hash Cond: (b.service_id = s.service_id)
                                       Buffers: shared hit=23583
-                                      ->  Nested Loop  (cost=123.55..25713.53 rows=3369 width=11) (actual time=0.073..3.668 rows=2934 loops=2)
+                                      ->  Nested Loop  (cost=123.55..25715.88 rows=3369 width=11) (actual time=0.093..3.903 rows=2934 loops=2)
                                             Buffers: shared hit=23567
-                                            ->  Parallel Bitmap Heap Scan on reschedules r  (cost=123.12..1437.65 rows=3369 width=15) (actual time=0.063..0.200 rows=2934 loops=2)
+                                            ->  Parallel Bitmap Heap Scan on reschedules r  (cost=123.12..1437.65 rows=3369 width=15) (actual time=0.083..0.240 rows=2934 loops=2)
                                                   Recheck Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
-                                                  Heap Blocks: exact=44
+                                                  Heap Blocks: exact=43
                                                   Buffers: shared hit=90
-                                                  ->  Bitmap Index Scan on idx_reschedules_created  (cost=0.00..121.69 rows=5727 width=0) (actual time=0.108..0.108 rows=5869 loops=1)
+                                                  ->  Bitmap Index Scan on idx_reschedules_created  (cost=0.00..121.69 rows=5727 width=0) (actual time=0.145..0.145 rows=5869 loops=1)
                                                         Index Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
                                                         Buffers: shared hit=19
                                             ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..7.21 rows=1 width=12) (actual time=0.001..0.001 rows=1 loops=5869)
                                                   Index Cond: (booking_id = r.booking_id)
                                                   Buffers: shared hit=23477
-                                      ->  Hash  (cost=1.60..1.60 rows=60 width=20) (actual time=0.020..0.021 rows=60 loops=2)
+                                      ->  Hash  (cost=1.60..1.60 rows=60 width=20) (actual time=0.020..0.020 rows=60 loops=2)
                                             Buckets: 1024  Batches: 1  Memory Usage: 12kB
                                             Buffers: shared hit=2
-                                            ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.012..0.014 rows=60 loops=2)
+                                            ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.011..0.013 rows=60 loops=2)
                                                   Buffers: shared hit=2
 Planning:
-  Buffers: shared hit=517
-Planning Time: 0.673 ms
-Execution Time: 8.214 ms
+  Buffers: shared hit=518
+Planning Time: 0.873 ms
+Execution Time: 8.102 ms
 === R11 run 3 ===
-Limit  (cost=26974.56..26974.58 rows=10 width=32) (actual time=7.881..7.896 rows=10 loops=1)
+Limit  (cost=26976.91..26976.94 rows=10 width=32) (actual time=7.795..7.808 rows=10 loops=1)
   Buffers: shared hit=23594
-  ->  Sort  (cost=26974.56..26974.71 rows=60 width=32) (actual time=7.880..7.894 rows=10 loops=1)
+  ->  Sort  (cost=26976.91..26977.06 rows=60 width=32) (actual time=7.794..7.807 rows=10 loops=1)
         Sort Key: (count(*)) DESC
         Sort Method: top-N heapsort  Memory: 26kB
         Buffers: shared hit=23594
-        ->  Finalize GroupAggregate  (cost=26922.75..26973.26 rows=60 width=32) (actual time=7.540..7.880 rows=60 loops=1)
+        ->  Finalize GroupAggregate  (cost=26925.10..26975.61 rows=60 width=32) (actual time=7.504..7.794 rows=60 loops=1)
               Group Key: s.service_name
               Buffers: shared hit=23591
-              ->  Gather Merge  (cost=26922.75..26972.21 rows=60 width=32) (actual time=7.532..7.862 rows=120 loops=1)
+              ->  Gather Merge  (cost=26925.10..26974.56 rows=60 width=32) (actual time=7.498..7.777 rows=120 loops=1)
                     Workers Planned: 1
                     Workers Launched: 1
                     Buffers: shared hit=23591
-                    ->  Partial GroupAggregate  (cost=25922.74..25965.45 rows=60 width=32) (actual time=6.013..6.252 rows=60 loops=2)
+                    ->  Partial GroupAggregate  (cost=25925.09..25967.80 rows=60 width=32) (actual time=6.078..6.284 rows=60 loops=2)
                           Group Key: s.service_name
                           Buffers: shared hit=23591
-                          ->  Sort  (cost=25922.74..25931.16 rows=3369 width=23) (actual time=6.004..6.072 rows=2934 loops=2)
+                          ->  Sort  (cost=25925.09..25933.51 rows=3369 width=23) (actual time=6.067..6.127 rows=2934 loops=2)
                                 Sort Key: s.service_name
-                                Sort Method: quicksort  Memory: 281kB
+                                Sort Method: quicksort  Memory: 277kB
                                 Buffers: shared hit=23591
-                                Worker 0:  Sort Method: quicksort  Memory: 211kB
-                                ->  Hash Join  (cost=125.90..25725.35 rows=3369 width=23) (actual time=0.124..4.052 rows=2934 loops=2)
+                                Worker 0:  Sort Method: quicksort  Memory: 216kB
+                                ->  Hash Join  (cost=125.90..25727.70 rows=3369 width=23) (actual time=0.118..4.142 rows=2934 loops=2)
                                       Hash Cond: (b.service_id = s.service_id)
                                       Buffers: shared hit=23583
-                                      ->  Nested Loop  (cost=123.55..25713.53 rows=3369 width=11) (actual time=0.097..3.800 rows=2934 loops=2)
+                                      ->  Nested Loop  (cost=123.55..25715.88 rows=3369 width=11) (actual time=0.091..3.895 rows=2934 loops=2)
                                             Buffers: shared hit=23567
-                                            ->  Parallel Bitmap Heap Scan on reschedules r  (cost=123.12..1437.65 rows=3369 width=15) (actual time=0.087..0.235 rows=2934 loops=2)
+                                            ->  Parallel Bitmap Heap Scan on reschedules r  (cost=123.12..1437.65 rows=3369 width=15) (actual time=0.080..0.231 rows=2934 loops=2)
                                                   Recheck Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
-                                                  Heap Blocks: exact=44
+                                                  Heap Blocks: exact=43
                                                   Buffers: shared hit=90
-                                                  ->  Bitmap Index Scan on idx_reschedules_created  (cost=0.00..121.69 rows=5727 width=0) (actual time=0.156..0.156 rows=5869 loops=1)
+                                                  ->  Bitmap Index Scan on idx_reschedules_created  (cost=0.00..121.69 rows=5727 width=0) (actual time=0.139..0.139 rows=5869 loops=1)
                                                         Index Cond: ((created_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (created_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
                                                         Buffers: shared hit=19
                                             ->  Index Scan using bookings_pkey on bookings b  (cost=0.43..7.21 rows=1 width=12) (actual time=0.001..0.001 rows=1 loops=5869)
@@ -133,6 +133,6 @@ Limit  (cost=26974.56..26974.58 rows=10 width=32) (actual time=7.881..7.896 rows
                                             ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=20) (actual time=0.011..0.014 rows=60 loops=2)
                                                   Buffers: shared hit=2
 Planning:
-  Buffers: shared hit=517
-Planning Time: 0.892 ms
-Execution Time: 7.942 ms
+  Buffers: shared hit=518
+Planning Time: 0.859 ms
+Execution Time: 7.857 ms
