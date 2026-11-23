@@ -1,0 +1,36 @@
+=== W05 run 1 ===
+Update on bookings  (cost=0.43..19494.83 rows=0 width=0) (actual time=286.410..286.411 rows=0 loops=1)
+  Buffers: shared hit=116552 read=8727 dirtied=9269 written=81
+  ->  Index Scan using idx_bookings_status_schedstart on bookings  (cost=0.43..19494.83 rows=1065 width=88) (actual time=0.021..2.547 rows=3296 loops=1)
+        Index Cond: ((status)::text = 'ASSIGNED'::text)
+        Filter: ((started_at IS NULL) AND (scheduled_end < '2026-07-02 00:00:00+05:30'::timestamp with time zone))
+        Rows Removed by Filter: 4100
+        Buffers: shared hit=6320 read=24 dirtied=1
+Planning:
+  Buffers: shared hit=252
+Planning Time: 0.410 ms
+Execution Time: 286.463 ms
+=== W05 run 2 ===
+Update on bookings  (cost=0.43..19503.38 rows=0 width=0) (actual time=122.210..122.211 rows=0 loops=1)
+  Buffers: shared hit=127270 read=58 dirtied=198 written=125
+  ->  Index Scan using idx_bookings_status_schedstart on bookings  (cost=0.43..19503.38 rows=1066 width=88) (actual time=0.021..2.247 rows=3296 loops=1)
+        Index Cond: ((status)::text = 'ASSIGNED'::text)
+        Filter: ((started_at IS NULL) AND (scheduled_end < '2026-07-02 00:00:00+05:30'::timestamp with time zone))
+        Rows Removed by Filter: 4100
+        Buffers: shared hit=6340
+Planning:
+  Buffers: shared hit=252
+Planning Time: 0.470 ms
+Execution Time: 122.262 ms
+=== W05 run 3 ===
+Update on bookings  (cost=0.43..19517.65 rows=0 width=0) (actual time=104.088..104.088 rows=0 loops=1)
+  Buffers: shared hit=128654 read=15 dirtied=84 written=68
+  ->  Index Scan using idx_bookings_status_schedstart on bookings  (cost=0.43..19517.65 rows=1067 width=88) (actual time=0.018..1.984 rows=3296 loops=1)
+        Index Cond: ((status)::text = 'ASSIGNED'::text)
+        Filter: ((started_at IS NULL) AND (scheduled_end < '2026-07-02 00:00:00+05:30'::timestamp with time zone))
+        Rows Removed by Filter: 4100
+        Buffers: shared hit=6340
+Planning:
+  Buffers: shared hit=252
+Planning Time: 0.383 ms
+Execution Time: 104.129 ms

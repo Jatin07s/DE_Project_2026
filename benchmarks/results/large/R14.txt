@@ -1,0 +1,108 @@
+=== R14 run 1 ===
+Finalize GroupAggregate  (cost=87910.77..127616.10 rows=132280 width=76) (actual time=192.697..238.398 rows=840 loops=1)
+  Group Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+  Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+  ->  Gather Merge  (cost=87910.77..122986.30 rows=264560 width=76) (actual time=192.635..238.063 rows=2520 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+        ->  Partial GroupAggregate  (cost=86910.75..91449.48 rows=132280 width=76) (actual time=171.379..211.610 rows=840 loops=3)
+              Group Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+              Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+              ->  Sort  (cost=86910.75..87421.65 rows=204363 width=68) (actual time=171.326..198.118 rows=160040 loops=3)
+                    Sort Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+                    Sort Method: external merge  Disk: 3648kB
+                    Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+                    Worker 0:  Sort Method: external merge  Disk: 4040kB
+                    Worker 1:  Sort Method: external merge  Disk: 3632kB
+                    ->  Hash Join  (cost=5487.94..60502.64 rows=204363 width=68) (actual time=16.928..104.021 rows=160040 loops=3)
+                          Hash Cond: (b.service_id = s.service_id)
+                          Buffers: shared hit=25 read=51264
+                          ->  Parallel Bitmap Heap Scan on bookings b  (cost=5485.59..58904.13 rows=204363 width=12) (actual time=16.883..66.733 rows=160040 loops=3)
+                                Recheck Cond: (city_id = 1)
+                                Heap Blocks: exact=16367
+                                Buffers: shared read=51264
+                                ->  Bitmap Index Scan on idx_bookings_city_service  (cost=0.00..5362.97 rows=490472 width=0) (actual time=14.290..14.292 rows=480120 loops=1)
+                                      Index Cond: (city_id = 1)
+                                      Buffers: shared read=410
+                          ->  Hash  (cost=1.60..1.60 rows=60 width=8) (actual time=0.027..0.028 rows=60 loops=3)
+                                Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                                Buffers: shared hit=3
+                                ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=8) (actual time=0.013..0.016 rows=60 loops=3)
+                                      Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=311 read=48
+Planning Time: 0.808 ms
+Execution Time: 239.188 ms
+=== R14 run 2 ===
+Finalize GroupAggregate  (cost=87910.77..127616.10 rows=132280 width=76) (actual time=197.395..234.263 rows=840 loops=1)
+  Group Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+  Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+  ->  Gather Merge  (cost=87910.77..122986.30 rows=264560 width=76) (actual time=197.355..233.999 rows=2520 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+        ->  Partial GroupAggregate  (cost=86910.75..91449.48 rows=132280 width=76) (actual time=174.587..214.020 rows=840 loops=3)
+              Group Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+              Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+              ->  Sort  (cost=86910.75..87421.65 rows=204363 width=68) (actual time=174.535..200.722 rows=160040 loops=3)
+                    Sort Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+                    Sort Method: external merge  Disk: 3624kB
+                    Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+                    Worker 0:  Sort Method: external merge  Disk: 3960kB
+                    Worker 1:  Sort Method: external merge  Disk: 3736kB
+                    ->  Hash Join  (cost=5487.94..60502.64 rows=204363 width=68) (actual time=15.153..101.388 rows=160040 loops=3)
+                          Hash Cond: (b.service_id = s.service_id)
+                          Buffers: shared hit=25 read=51264
+                          ->  Parallel Bitmap Heap Scan on bookings b  (cost=5485.59..58904.13 rows=204363 width=12) (actual time=15.121..63.761 rows=160040 loops=3)
+                                Recheck Cond: (city_id = 1)
+                                Heap Blocks: exact=16316
+                                Buffers: shared read=51264
+                                ->  Bitmap Index Scan on idx_bookings_city_service  (cost=0.00..5362.97 rows=490472 width=0) (actual time=12.661..12.661 rows=480120 loops=1)
+                                      Index Cond: (city_id = 1)
+                                      Buffers: shared read=410
+                          ->  Hash  (cost=1.60..1.60 rows=60 width=8) (actual time=0.018..0.018 rows=60 loops=3)
+                                Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                                Buffers: shared hit=3
+                                ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=8) (actual time=0.011..0.014 rows=60 loops=3)
+                                      Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=311 read=48
+Planning Time: 0.703 ms
+Execution Time: 235.024 ms
+=== R14 run 3 ===
+Finalize GroupAggregate  (cost=87910.77..127616.10 rows=132280 width=76) (actual time=194.812..232.576 rows=840 loops=1)
+  Group Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+  Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+  ->  Gather Merge  (cost=87910.77..122986.30 rows=264560 width=76) (actual time=194.770..232.305 rows=2520 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+        ->  Partial GroupAggregate  (cost=86910.75..91449.48 rows=132280 width=76) (actual time=175.502..212.974 rows=840 loops=3)
+              Group Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+              Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+              ->  Sort  (cost=86910.75..87421.65 rows=204363 width=68) (actual time=175.452..200.808 rows=160040 loops=3)
+                    Sort Key: s.category_id, (EXTRACT(isodow FROM b.scheduled_start)), (EXTRACT(hour FROM b.scheduled_start))
+                    Sort Method: external merge  Disk: 3688kB
+                    Buffers: shared hit=53 read=51264, temp read=1415 written=1421
+                    Worker 0:  Sort Method: external merge  Disk: 3888kB
+                    Worker 1:  Sort Method: external merge  Disk: 3744kB
+                    ->  Hash Join  (cost=5487.94..60502.64 rows=204363 width=68) (actual time=15.293..101.490 rows=160040 loops=3)
+                          Hash Cond: (b.service_id = s.service_id)
+                          Buffers: shared hit=25 read=51264
+                          ->  Parallel Bitmap Heap Scan on bookings b  (cost=5485.59..58904.13 rows=204363 width=12) (actual time=15.262..64.192 rows=160040 loops=3)
+                                Recheck Cond: (city_id = 1)
+                                Heap Blocks: exact=16508
+                                Buffers: shared read=51264
+                                ->  Bitmap Index Scan on idx_bookings_city_service  (cost=0.00..5362.97 rows=490472 width=0) (actual time=12.787..12.787 rows=480120 loops=1)
+                                      Index Cond: (city_id = 1)
+                                      Buffers: shared read=410
+                          ->  Hash  (cost=1.60..1.60 rows=60 width=8) (actual time=0.017..0.018 rows=60 loops=3)
+                                Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                                Buffers: shared hit=3
+                                ->  Seq Scan on services s  (cost=0.00..1.60 rows=60 width=8) (actual time=0.011..0.013 rows=60 loops=3)
+                                      Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=311 read=48
+Planning Time: 0.835 ms
+Execution Time: 235.924 ms

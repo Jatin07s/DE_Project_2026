@@ -1,0 +1,48 @@
+=== R24 run 1 ===
+Sort  (cost=2068.07..2095.36 rows=10917 width=48) (actual time=23.958..23.958 rows=7 loops=1)
+  Sort Key: (date_trunc('month'::text, scheduled_start))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=20784 read=3019
+  ->  HashAggregate  (cost=1172.09..1335.85 rows=10917 width=48) (actual time=23.902..23.949 rows=7 loops=1)
+        Group Key: date_trunc('month'::text, scheduled_start)
+        Batches: 1  Memory Usage: 409kB
+        Buffers: shared hit=20781 read=3019
+        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..999.66 rows=22991 width=11) (actual time=0.022..21.485 rows=23940 loops=1)
+              Index Cond: (scheduled_start >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
+              Buffers: shared hit=20781 read=3019
+Planning:
+  Buffers: shared hit=303
+Planning Time: 0.432 ms
+Execution Time: 24.035 ms
+=== R24 run 2 ===
+Sort  (cost=2068.07..2095.36 rows=10917 width=48) (actual time=17.324..17.324 rows=7 loops=1)
+  Sort Key: (date_trunc('month'::text, scheduled_start))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=23803
+  ->  HashAggregate  (cost=1172.09..1335.85 rows=10917 width=48) (actual time=17.278..17.318 rows=7 loops=1)
+        Group Key: date_trunc('month'::text, scheduled_start)
+        Batches: 1  Memory Usage: 409kB
+        Buffers: shared hit=23800
+        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..999.66 rows=22991 width=11) (actual time=0.010..15.280 rows=23940 loops=1)
+              Index Cond: (scheduled_start >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
+              Buffers: shared hit=23800
+Planning:
+  Buffers: shared hit=303
+Planning Time: 0.412 ms
+Execution Time: 17.377 ms
+=== R24 run 3 ===
+Sort  (cost=2068.07..2095.36 rows=10917 width=48) (actual time=16.968..16.968 rows=7 loops=1)
+  Sort Key: (date_trunc('month'::text, scheduled_start))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=23803
+  ->  HashAggregate  (cost=1172.09..1335.85 rows=10917 width=48) (actual time=16.925..16.962 rows=7 loops=1)
+        Group Key: date_trunc('month'::text, scheduled_start)
+        Batches: 1  Memory Usage: 409kB
+        Buffers: shared hit=23800
+        ->  Index Scan using idx_bookings_cancel_fee on bookings  (cost=0.29..999.66 rows=22991 width=11) (actual time=0.012..15.119 rows=23940 loops=1)
+              Index Cond: (scheduled_start >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
+              Buffers: shared hit=23800
+Planning:
+  Buffers: shared hit=303
+Planning Time: 0.436 ms
+Execution Time: 17.023 ms

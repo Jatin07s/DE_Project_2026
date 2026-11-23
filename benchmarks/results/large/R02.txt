@@ -1,0 +1,186 @@
+=== R02 run 1 ===
+Limit  (cost=5835.29..5914.47 rows=10 width=22) (actual time=10.174..12.190 rows=10 loops=1)
+  Buffers: shared hit=2552 read=323
+  ->  Nested Loop Anti Join  (cost=5835.29..13990.09 rows=1030 width=22) (actual time=10.173..12.189 rows=10 loops=1)
+        Buffers: shared hit=2552 read=323
+        ->  Nested Loop  (cost=5834.86..7330.71 rows=1030 width=22) (actual time=10.139..12.084 rows=10 loops=1)
+              Buffers: shared hit=2506 read=306
+              ->  Gather Merge  (cost=5834.43..5996.44 rows=1391 width=26) (actual time=9.937..9.950 rows=10 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=2492 read=280
+                    ->  Sort  (cost=4834.41..4835.86 rows=580 width=26) (actual time=8.170..8.185 rows=476 loops=3)
+                          Sort Key: p.rating DESC NULLS LAST
+                          Sort Method: quicksort  Memory: 75kB
+                          Buffers: shared hit=2492 read=280
+                          Worker 0:  Sort Method: quicksort  Memory: 61kB
+                          Worker 1:  Sort Method: quicksort  Memory: 65kB
+                          ->  Nested Loop  (cost=1184.11..4807.79 rows=580 width=26) (actual time=1.717..7.961 rows=783 loops=3)
+                                Buffers: shared hit=2478 read=280
+                                ->  Merge Join  (cost=1183.96..4661.21 rows=5795 width=30) (actual time=1.702..7.210 rows=4724 loops=3)
+                                      Merge Cond: (ps.pro_id = p.pro_id)
+                                      Buffers: shared hit=2416 read=280
+                                      ->  Parallel Index Only Scan using pk_pro_skills on pro_skills ps  (cost=0.29..3280.66 rows=41667 width=8) (actual time=0.062..3.897 rows=33329 loops=3)
+                                            Heap Fetches: 99987
+                                            Buffers: shared hit=797 read=272
+                                      ->  Sort  (cost=1183.67..1201.05 rows=6954 width=22) (actual time=1.629..1.806 rows=7060 loops=3)
+                                            Sort Key: p.pro_id
+                                            Sort Method: quicksort  Memory: 533kB
+                                            Buffers: shared hit=1619 read=8
+                                            Worker 0:  Sort Method: quicksort  Memory: 533kB
+                                            Worker 1:  Sort Method: quicksort  Memory: 533kB
+                                            ->  Bitmap Heap Scan on professionals p  (cost=99.57..739.88 rows=6954 width=22) (actual time=0.159..1.225 rows=7073 loops=3)
+                                                  Recheck Cond: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                                  Heap Blocks: exact=531
+                                                  Buffers: shared hit=1611 read=8
+                                                  ->  Bitmap Index Scan on idx_professionals_city_status  (cost=0.00..97.83 rows=6954 width=0) (actual time=0.120..0.120 rows=7073 loops=3)
+                                                        Index Cond: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                                        Buffers: shared hit=18 read=8
+                                ->  Memoize  (cost=0.15..0.17 rows=1 width=4) (actual time=0.000..0.000 rows=0 loops=14172)
+                                      Cache Key: ps.category_id
+                                      Cache Mode: logical
+                                      Hits: 5683  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      Buffers: shared hit=62
+                                      Worker 0:  Hits: 4033  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      Worker 1:  Hits: 4426  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      ->  Index Scan using service_categories_pkey on service_categories c  (cost=0.14..0.16 rows=1 width=4) (actual time=0.001..0.001 rows=0 loops=30)
+                                            Index Cond: (category_id = ps.category_id)
+                                            Filter: ((category_name)::text = 'Salon for Women'::text)
+                                            Rows Removed by Filter: 1
+                                            Buffers: shared hit=62
+              ->  Index Scan using pk_pro_availability on pro_availability a  (cost=0.43..0.96 rows=1 width=4) (actual time=0.213..0.213 rows=1 loops=10)
+                    Index Cond: ((pro_id = ps.pro_id) AND (work_date = '2026-07-03'::date))
+                    Filter: ((start_time <= '11:00:00'::time without time zone) AND (end_time >= '12:30:00'::time without time zone))
+                    Buffers: shared hit=14 read=26
+        ->  Index Scan using idx_bookings_pro_status on bookings b  (cost=0.43..6.46 rows=1 width=4) (actual time=0.009..0.009 rows=0 loops=10)
+              Index Cond: ((pro_id = p.pro_id) AND ((status)::text = ANY ('{ASSIGNED,IN_PROGRESS}'::text[])))
+              Filter: ((scheduled_start < '2026-07-03 12:30:00+05:30'::timestamp with time zone) AND (scheduled_end > '2026-07-03 11:00:00+05:30'::timestamp with time zone))
+              Buffers: shared hit=46 read=17
+Planning:
+  Buffers: shared hit=695 read=23
+Planning Time: 2.656 ms
+Execution Time: 12.235 ms
+=== R02 run 2 ===
+Limit  (cost=5835.29..5914.47 rows=10 width=22) (actual time=10.658..11.765 rows=10 loops=1)
+  Buffers: shared hit=2852 read=16
+  ->  Nested Loop Anti Join  (cost=5835.29..13990.09 rows=1030 width=22) (actual time=10.658..11.763 rows=10 loops=1)
+        Buffers: shared hit=2852 read=16
+        ->  Nested Loop  (cost=5834.86..7330.71 rows=1030 width=22) (actual time=10.622..11.664 rows=10 loops=1)
+              Buffers: shared hit=2795 read=10
+              ->  Gather Merge  (cost=5834.43..5996.44 rows=1391 width=26) (actual time=10.611..10.632 rows=10 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=2765
+                    ->  Sort  (cost=4834.41..4835.86 rows=580 width=26) (actual time=8.713..8.727 rows=467 loops=3)
+                          Sort Key: p.rating DESC NULLS LAST
+                          Sort Method: quicksort  Memory: 77kB
+                          Buffers: shared hit=2765
+                          Worker 0:  Sort Method: quicksort  Memory: 62kB
+                          Worker 1:  Sort Method: quicksort  Memory: 63kB
+                          ->  Nested Loop  (cost=1184.11..4807.79 rows=580 width=26) (actual time=2.142..8.511 rows=783 loops=3)
+                                Buffers: shared hit=2751
+                                ->  Merge Join  (cost=1183.96..4661.21 rows=5795 width=30) (actual time=2.128..7.660 rows=4724 loops=3)
+                                      Merge Cond: (ps.pro_id = p.pro_id)
+                                      Buffers: shared hit=2689
+                                      ->  Parallel Index Only Scan using pk_pro_skills on pro_skills ps  (cost=0.29..3280.66 rows=41667 width=8) (actual time=0.010..3.535 rows=33329 loops=3)
+                                            Heap Fetches: 99987
+                                            Buffers: shared hit=1062
+                                      ->  Sort  (cost=1183.67..1201.05 rows=6954 width=22) (actual time=2.108..2.321 rows=7060 loops=3)
+                                            Sort Key: p.pro_id
+                                            Sort Method: quicksort  Memory: 533kB
+                                            Buffers: shared hit=1627
+                                            Worker 0:  Sort Method: quicksort  Memory: 533kB
+                                            Worker 1:  Sort Method: quicksort  Memory: 533kB
+                                            ->  Bitmap Heap Scan on professionals p  (cost=99.57..739.88 rows=6954 width=22) (actual time=0.194..1.546 rows=7073 loops=3)
+                                                  Recheck Cond: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                                  Heap Blocks: exact=531
+                                                  Buffers: shared hit=1619
+                                                  ->  Bitmap Index Scan on idx_professionals_city_status  (cost=0.00..97.83 rows=6954 width=0) (actual time=0.145..0.145 rows=7073 loops=3)
+                                                        Index Cond: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                                        Buffers: shared hit=26
+                                ->  Memoize  (cost=0.15..0.17 rows=1 width=4) (actual time=0.000..0.000 rows=0 loops=14172)
+                                      Cache Key: ps.category_id
+                                      Cache Mode: logical
+                                      Hits: 5796  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      Buffers: shared hit=62
+                                      Worker 0:  Hits: 4089  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      Worker 1:  Hits: 4257  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      ->  Index Scan using service_categories_pkey on service_categories c  (cost=0.14..0.16 rows=1 width=4) (actual time=0.001..0.001 rows=0 loops=30)
+                                            Index Cond: (category_id = ps.category_id)
+                                            Filter: ((category_name)::text = 'Salon for Women'::text)
+                                            Rows Removed by Filter: 1
+                                            Buffers: shared hit=62
+              ->  Index Scan using pk_pro_availability on pro_availability a  (cost=0.43..0.96 rows=1 width=4) (actual time=0.103..0.103 rows=1 loops=10)
+                    Index Cond: ((pro_id = ps.pro_id) AND (work_date = '2026-07-03'::date))
+                    Filter: ((start_time <= '11:00:00'::time without time zone) AND (end_time >= '12:30:00'::time without time zone))
+                    Buffers: shared hit=30 read=10
+        ->  Index Scan using idx_bookings_pro_status on bookings b  (cost=0.43..6.46 rows=1 width=4) (actual time=0.008..0.008 rows=0 loops=10)
+              Index Cond: ((pro_id = p.pro_id) AND ((status)::text = ANY ('{ASSIGNED,IN_PROGRESS}'::text[])))
+              Filter: ((scheduled_start < '2026-07-03 12:30:00+05:30'::timestamp with time zone) AND (scheduled_end > '2026-07-03 11:00:00+05:30'::timestamp with time zone))
+              Buffers: shared hit=57 read=6
+Planning:
+  Buffers: shared hit=710
+Planning Time: 2.256 ms
+Execution Time: 11.838 ms
+=== R02 run 3 ===
+Limit  (cost=5835.29..5914.47 rows=10 width=22) (actual time=9.801..10.526 rows=10 loops=1)
+  Buffers: shared hit=2866
+  ->  Nested Loop Anti Join  (cost=5835.29..13990.09 rows=1030 width=22) (actual time=9.801..10.525 rows=10 loops=1)
+        Buffers: shared hit=2866
+        ->  Nested Loop  (cost=5834.86..7330.71 rows=1030 width=22) (actual time=9.774..10.441 rows=10 loops=1)
+              Buffers: shared hit=2803
+              ->  Gather Merge  (cost=5834.43..5996.44 rows=1391 width=26) (actual time=9.763..10.377 rows=10 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=2763
+                    ->  Sort  (cost=4834.41..4835.86 rows=580 width=26) (actual time=7.965..7.977 rows=455 loops=3)
+                          Sort Key: p.rating DESC NULLS LAST
+                          Sort Method: quicksort  Memory: 78kB
+                          Buffers: shared hit=2763
+                          Worker 0:  Sort Method: quicksort  Memory: 60kB
+                          Worker 1:  Sort Method: quicksort  Memory: 63kB
+                          ->  Nested Loop  (cost=1184.11..4807.79 rows=580 width=26) (actual time=1.939..7.773 rows=783 loops=3)
+                                Buffers: shared hit=2749
+                                ->  Merge Join  (cost=1183.96..4661.21 rows=5795 width=30) (actual time=1.925..6.981 rows=4724 loops=3)
+                                      Merge Cond: (ps.pro_id = p.pro_id)
+                                      Buffers: shared hit=2687
+                                      ->  Parallel Index Only Scan using pk_pro_skills on pro_skills ps  (cost=0.29..3280.66 rows=41667 width=8) (actual time=0.009..3.223 rows=33329 loops=3)
+                                            Heap Fetches: 99987
+                                            Buffers: shared hit=1060
+                                      ->  Sort  (cost=1183.67..1201.05 rows=6954 width=22) (actual time=1.907..2.100 rows=7060 loops=3)
+                                            Sort Key: p.pro_id
+                                            Sort Method: quicksort  Memory: 533kB
+                                            Buffers: shared hit=1627
+                                            Worker 0:  Sort Method: quicksort  Memory: 533kB
+                                            Worker 1:  Sort Method: quicksort  Memory: 533kB
+                                            ->  Bitmap Heap Scan on professionals p  (cost=99.57..739.88 rows=6954 width=22) (actual time=0.168..1.397 rows=7073 loops=3)
+                                                  Recheck Cond: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                                  Heap Blocks: exact=531
+                                                  Buffers: shared hit=1619
+                                                  ->  Bitmap Index Scan on idx_professionals_city_status  (cost=0.00..97.83 rows=6954 width=0) (actual time=0.127..0.127 rows=7073 loops=3)
+                                                        Index Cond: ((city_id = 1) AND ((status)::text = 'ACTIVE'::text))
+                                                        Buffers: shared hit=26
+                                ->  Memoize  (cost=0.15..0.17 rows=1 width=4) (actual time=0.000..0.000 rows=0 loops=14172)
+                                      Cache Key: ps.category_id
+                                      Cache Mode: logical
+                                      Hits: 5937  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      Buffers: shared hit=62
+                                      Worker 0:  Hits: 3940  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      Worker 1:  Hits: 4265  Misses: 10  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                      ->  Index Scan using service_categories_pkey on service_categories c  (cost=0.14..0.16 rows=1 width=4) (actual time=0.001..0.001 rows=0 loops=30)
+                                            Index Cond: (category_id = ps.category_id)
+                                            Filter: ((category_name)::text = 'Salon for Women'::text)
+                                            Rows Removed by Filter: 1
+                                            Buffers: shared hit=62
+              ->  Index Scan using pk_pro_availability on pro_availability a  (cost=0.43..0.96 rows=1 width=4) (actual time=0.006..0.006 rows=1 loops=10)
+                    Index Cond: ((pro_id = ps.pro_id) AND (work_date = '2026-07-03'::date))
+                    Filter: ((start_time <= '11:00:00'::time without time zone) AND (end_time >= '12:30:00'::time without time zone))
+                    Buffers: shared hit=40
+        ->  Index Scan using idx_bookings_pro_status on bookings b  (cost=0.43..6.46 rows=1 width=4) (actual time=0.007..0.007 rows=0 loops=10)
+              Index Cond: ((pro_id = p.pro_id) AND ((status)::text = ANY ('{ASSIGNED,IN_PROGRESS}'::text[])))
+              Filter: ((scheduled_start < '2026-07-03 12:30:00+05:30'::timestamp with time zone) AND (scheduled_end > '2026-07-03 11:00:00+05:30'::timestamp with time zone))
+              Buffers: shared hit=63
+Planning:
+  Buffers: shared hit=710
+Planning Time: 2.101 ms
+Execution Time: 10.584 ms

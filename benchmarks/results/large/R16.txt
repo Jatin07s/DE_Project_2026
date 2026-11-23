@@ -1,0 +1,105 @@
+=== R16 run 1 ===
+Limit  (cost=8221.29..8221.31 rows=10 width=15) (actual time=6.961..7.690 rows=10 loops=1)
+  Buffers: shared hit=3209 read=450
+  ->  Sort  (cost=8221.29..8221.54 rows=100 width=15) (actual time=6.961..7.689 rows=10 loops=1)
+        Sort Key: (count(*)) DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=3209 read=450
+        ->  Finalize GroupAggregate  (cost=8193.79..8219.13 rows=100 width=15) (actual time=6.947..7.683 rows=16 loops=1)
+              Group Key: pincode
+              Buffers: shared hit=3206 read=450
+              ->  Gather Merge  (cost=8193.79..8217.13 rows=200 width=15) (actual time=6.943..7.677 rows=48 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=3206 read=450
+                    ->  Sort  (cost=7193.77..7194.02 rows=100 width=15) (actual time=5.542..5.543 rows=16 loops=3)
+                          Sort Key: pincode
+                          Sort Method: quicksort  Memory: 25kB
+                          Buffers: shared hit=3206 read=450
+                          Worker 0:  Sort Method: quicksort  Memory: 25kB
+                          Worker 1:  Sort Method: quicksort  Memory: 25kB
+                          ->  Partial HashAggregate  (cost=7189.45..7190.45 rows=100 width=15) (actual time=5.510..5.511 rows=16 loops=3)
+                                Group Key: pincode
+                                Batches: 1  Memory Usage: 24kB
+                                Buffers: shared hit=3190 read=450
+                                Worker 0:  Batches: 1  Memory Usage: 24kB
+                                Worker 1:  Batches: 1  Memory Usage: 24kB
+                                ->  Parallel Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..7134.89 rows=10912 width=7) (actual time=0.021..4.854 rows=8829 loops=3)
+                                      Index Cond: ((booked_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (booked_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                                      Filter: (city_id = 2)
+                                      Rows Removed by Filter: 46116
+                                      Buffers: shared hit=3190 read=450
+Planning:
+  Buffers: shared hit=297 read=4
+Planning Time: 0.540 ms
+Execution Time: 7.730 ms
+=== R16 run 2 ===
+Limit  (cost=8221.29..8221.31 rows=10 width=15) (actual time=6.637..7.230 rows=10 loops=1)
+  Buffers: shared hit=3655 read=2
+  ->  Sort  (cost=8221.29..8221.54 rows=100 width=15) (actual time=6.637..7.229 rows=10 loops=1)
+        Sort Key: (count(*)) DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=3655 read=2
+        ->  Finalize GroupAggregate  (cost=8193.79..8219.13 rows=100 width=15) (actual time=6.612..7.223 rows=16 loops=1)
+              Group Key: pincode
+              Buffers: shared hit=3652 read=2
+              ->  Gather Merge  (cost=8193.79..8217.13 rows=200 width=15) (actual time=6.609..7.212 rows=48 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=3652 read=2
+                    ->  Sort  (cost=7193.77..7194.02 rows=100 width=15) (actual time=5.214..5.214 rows=16 loops=3)
+                          Sort Key: pincode
+                          Sort Method: quicksort  Memory: 25kB
+                          Buffers: shared hit=3652 read=2
+                          Worker 0:  Sort Method: quicksort  Memory: 25kB
+                          Worker 1:  Sort Method: quicksort  Memory: 25kB
+                          ->  Partial HashAggregate  (cost=7189.45..7190.45 rows=100 width=15) (actual time=5.184..5.185 rows=16 loops=3)
+                                Group Key: pincode
+                                Batches: 1  Memory Usage: 24kB
+                                Buffers: shared hit=3636 read=2
+                                Worker 0:  Batches: 1  Memory Usage: 24kB
+                                Worker 1:  Batches: 1  Memory Usage: 24kB
+                                ->  Parallel Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..7134.89 rows=10912 width=7) (actual time=0.008..4.545 rows=8829 loops=3)
+                                      Index Cond: ((booked_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (booked_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                                      Filter: (city_id = 2)
+                                      Rows Removed by Filter: 46116
+                                      Buffers: shared hit=3636 read=2
+Planning:
+  Buffers: shared hit=301
+Planning Time: 0.486 ms
+Execution Time: 7.263 ms
+=== R16 run 3 ===
+Limit  (cost=8221.29..8221.31 rows=10 width=15) (actual time=6.602..7.239 rows=10 loops=1)
+  Buffers: shared hit=3659
+  ->  Sort  (cost=8221.29..8221.54 rows=100 width=15) (actual time=6.602..7.237 rows=10 loops=1)
+        Sort Key: (count(*)) DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=3659
+        ->  Finalize GroupAggregate  (cost=8193.79..8219.13 rows=100 width=15) (actual time=6.589..7.231 rows=16 loops=1)
+              Group Key: pincode
+              Buffers: shared hit=3656
+              ->  Gather Merge  (cost=8193.79..8217.13 rows=200 width=15) (actual time=6.586..7.226 rows=48 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=3656
+                    ->  Sort  (cost=7193.77..7194.02 rows=100 width=15) (actual time=5.261..5.262 rows=16 loops=3)
+                          Sort Key: pincode
+                          Sort Method: quicksort  Memory: 25kB
+                          Buffers: shared hit=3656
+                          Worker 0:  Sort Method: quicksort  Memory: 25kB
+                          Worker 1:  Sort Method: quicksort  Memory: 25kB
+                          ->  Partial HashAggregate  (cost=7189.45..7190.45 rows=100 width=15) (actual time=5.231..5.233 rows=16 loops=3)
+                                Group Key: pincode
+                                Batches: 1  Memory Usage: 24kB
+                                Buffers: shared hit=3640
+                                Worker 0:  Batches: 1  Memory Usage: 24kB
+                                Worker 1:  Batches: 1  Memory Usage: 24kB
+                                ->  Parallel Index Scan using idx_bookings_booked_at_desc on bookings  (cost=0.43..7134.89 rows=10912 width=7) (actual time=0.008..4.594 rows=8829 loops=3)
+                                      Index Cond: ((booked_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (booked_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                                      Filter: (city_id = 2)
+                                      Rows Removed by Filter: 46116
+                                      Buffers: shared hit=3640
+Planning:
+  Buffers: shared hit=301
+Planning Time: 0.496 ms
+Execution Time: 7.273 ms

@@ -1,0 +1,33 @@
+=== W03 run 1 ===
+Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.017..0.017 rows=0 loops=1)
+  Buffers: shared hit=6 read=1
+  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.016..0.016 rows=0 loops=1)
+        Index Cond: ((pro_id = 425) AND ((status)::text = 'ASSIGNED'::text))
+        Filter: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+        Buffers: shared hit=6 read=1
+Planning:
+  Buffers: shared hit=229 read=36
+Planning Time: 0.607 ms
+Execution Time: 0.087 ms
+=== W03 run 2 ===
+Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.010..0.010 rows=0 loops=1)
+  Buffers: shared hit=3
+  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.010..0.010 rows=0 loops=1)
+        Index Cond: ((pro_id = 425) AND ((status)::text = 'ASSIGNED'::text))
+        Filter: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=265
+Planning Time: 0.497 ms
+Execution Time: 0.054 ms
+=== W03 run 3 ===
+Update on bookings  (cost=0.43..8.46 rows=0 width=0) (actual time=0.009..0.009 rows=0 loops=1)
+  Buffers: shared hit=3
+  ->  Index Scan using idx_bookings_pro_status on bookings  (cost=0.43..8.46 rows=1 width=120) (actual time=0.009..0.009 rows=0 loops=1)
+        Index Cond: ((pro_id = 425) AND ((status)::text = 'ASSIGNED'::text))
+        Filter: ((scheduled_start >= '2026-07-02 00:00:00+05:30'::timestamp with time zone) AND (scheduled_start < '2026-07-03 00:00:00+05:30'::timestamp with time zone))
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=265
+Planning Time: 0.520 ms
+Execution Time: 0.054 ms

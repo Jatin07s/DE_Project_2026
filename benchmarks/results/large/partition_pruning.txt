@@ -1,0 +1,29 @@
+BEGIN
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+INSERT 0 31202
+ANALYZE
+    partition_name    | sampled_rows 
+----------------------+--------------
+ uc.bookings_cp4_2025 |        20157
+ uc.bookings_cp4_2026 |        11045
+(2 rows)
+
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=648.28..648.29 rows=1 width=8) (actual time=0.865..0.865 rows=1 loops=1)
+   Buffers: shared hit=342
+   ->  Seq Scan on bookings_cp4_2025 bookings_cp4_partition_demo  (cost=0.00..644.36 rows=1572 width=0) (actual time=0.332..0.834 rows=1473 loops=1)
+         Filter: ((booked_at >= '2025-06-01 05:30:00+05:30'::timestamp with time zone) AND (booked_at < '2025-07-01 05:30:00+05:30'::timestamp with time zone))
+         Rows Removed by Filter: 18684
+         Buffers: shared hit=342
+ Planning:
+   Buffers: shared hit=32
+ Planning Time: 0.053 ms
+ Execution Time: 0.869 ms
+(10 rows)
+
+ROLLBACK
