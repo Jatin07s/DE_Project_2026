@@ -94,10 +94,55 @@ The five regressions in section 2 are **measured candidates** for investigation,
 
 **Required manual validation before declaring targets met:**
 
-- [ ] Check faculty-defined latency targets in your project `README.md`, classify each query as PASS/FAIL using measured large avg.
+- [x] Check faculty-defined latency targets in your project `README.md`, classify each query as PASS/FAIL using measured large avg.
 - [ ] For a scale-only issue, record relevant before/after plan lines and verify any fix with fresh real benchmark output.
 - [ ] Confirm the optimized SQL results have the same semantics on large data; fix any CP3-dependent query issues, especially NULL-sensitive logic.
-- [ ] Review the `booked_at` partitioning demo plan to verify pruning, and explain why this prototype is not a production migration.
+- [x] Review the `booked_at` partitioning demo plan to verify pruning, and explain why this prototype is not a production migration.
+
+## 6.1 Faculty Performance Target Verification
+
+| Query | Large Average (ms) | Target (ms) | Status |
+|---|---:|---:|---|
+| R01 | 0.063 | < 5 | PASS |
+| R02 | 11.552 | < 5 | FAIL |
+| R03 | 0.064 | < 5 | PASS |
+| R04 | 0.665 | < 5 | PASS |
+| R05 | 1.860 | < 5 | PASS |
+| R06 | 0.353 | < 5 | PASS |
+| R07 | 0.485 | < 5 | PASS |
+| R08 | 25.013 | < 250 | PASS |
+| R09 | 19.837 | < 5000 | PASS |
+| R10 | 201.481 | < 5000 | PASS |
+| R11 | 8.092 | < 250 | PASS |
+| R12 | 57.720 | < 5000 | PASS |
+| R13 | 103.326 | < 250 | PASS |
+| R14 | 236.712 | < 5000 | PASS |
+| R15 | 115.827 | < 5000 | PASS |
+| R16 | 7.422 | < 250 | PASS |
+| R17 | 330.633 | < 5000 | PASS |
+| R18 | 0.296 | < 250 | PASS |
+| R19 | 336.226 | < 5000 | PASS |
+| R20 | 119.140 | < 5000 | PASS |
+| R21 | 195.975 | < 5000 | PASS |
+| R22 | 12.037 | < 250 | PASS |
+| R23 | 0.050 | < 5 | PASS |
+| R24 | 19.478 | < 5000 | PASS |
+| R25 | 63.442 | < 5000 | PASS |
+| W01 | 1.325 | < 5 | PASS |
+| W02 | 287.777 | < 5 | FAIL |
+| W03 | 0.065 | < 5 | PASS |
+| W04 | 73.431 | < 1000 | PASS |
+| W05 | 170.951 | < 250 | PASS |
+
+**Result:** 28/30 targets passed.
+
+### Queries exceeding targets
+
+**R02:** The large-data plan scans many pro_skills tuples and performs expensive heap fetches, joins and sorting.
+
+**W02:** The primary-key scan filters nearly 3 million bookings while searching for the oldest REQUESTED booking. A targeted partial index is a candidate fix, not yet benchmarked.
+
+These target failures remain unresolved; no unmeasured performance improvement is claimed.
 
 ## 7. Conclusion
 
